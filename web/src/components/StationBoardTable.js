@@ -71,7 +71,10 @@ class StationBoardTable extends React.Component {
                                 <tr key={`train-${i}`}>
                                     <td style={{background: t.color}}>
                                         <span style={{color: this.getColor(t.color)}}>
+                                            <a
+                                                href={`http://fahrplan.sbb.ch/bin/trainsearch.exe/dn?trainname=${t.number}&selectDate=today`}>
                                             {t.line}
+                                            </a>
                                         </span>
                                     </td>
                                     <td>{t.operationType !== "start" && t.arr_time.format('HH:mm')}</td>
@@ -79,10 +82,7 @@ class StationBoardTable extends React.Component {
                                     <td>{t.operationType !== "end" && t.dep_time.format('HH:mm')}</td>
                                     <td>{t.dep_delay}</td>
                                     <td className="additionalInfo">
-                                        <a
-                                            href={`http://fahrplan.sbb.ch/bin/trainsearch.exe/dn?trainname=${t.number}&selectDate=today`}>
-                                            {t.number}
-                                        </a>
+                                        {t.number}
                                     </td>
                                     <td>
                                         {`${getPrefix(t)} `}
