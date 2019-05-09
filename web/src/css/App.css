@@ -1,0 +1,87 @@
+.App {
+    text-align: center;
+}
+
+.App-header {
+    background-color: rgba(22, 25, 31, 1);
+    padding: 20px 0px 1px 0px;
+}
+
+.App-title {
+    font-size: 1.5em;
+}
+
+.App-intro {
+    display: inline-block;
+}
+
+nav {
+    padding: 5px 5px;
+    background: rgba(111, 45, 186, 1);
+    border-bottom: 1px solid white;
+}
+
+nav a {
+    padding: 0px 10px;
+    text-decoration: none;
+}
+
+a:link,
+a:hover,
+a:active,
+a:visited {
+    color: white;
+}
+
+.stationBoardTableContainer {
+    margin-top: 25px;
+}
+
+.stationBoardTableContainer input {
+    display: none;
+}
+
+.stationBoardTableContainer label {
+    margin: 2px;
+    padding: 4px 6px;
+}
+
+.stationBoardTableContainer input + label {
+    cursor: pointer;
+}
+
+.stationBoardTableContainer input:checked + label {
+    background: rgba(111, 45, 186, 1);
+    border-bottom: 1px solid white;
+}
+
+.stationBoardTable {
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    overflow-x: auto;
+    border-collapse: collapse
+}
+
+.stationBoardTable thead {
+    border-bottom: 2px solid white;
+    text-align: center;
+}
+
+.stationBoardTable td {
+    font-size: small;
+    padding: 5px 5px;
+    white-space: nowrap;
+    border-bottom: 0.1px solid white;
+}
+
+.stationBoardTable td a:link {
+    text-decoration: none;
+}
+
+@media (max-width: 700px) {
+    .additionalInfo {
+        display: none;
+    }
+}
