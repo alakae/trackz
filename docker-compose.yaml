@@ -6,3 +6,6 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "8080:3000"
+    volumes:
+      - /app/node_modules
+      - ./web:/app
