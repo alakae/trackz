@@ -24,7 +24,7 @@ class StationSearchResults extends Component {
                 {
                     this.props.result.map((e, i) =>
                         <p key={`result-${i}`}>
-                            <a href={`/station/${e.label}`}>
+                            <a href={`station/${e.label}`}>
                                 {e.label}
                             </a>
                         </p>
