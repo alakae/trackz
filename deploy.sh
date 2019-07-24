@@ -6,4 +6,4 @@ docker push alakae/trackz:latest
 docker push alakae/trackz:$SHA
 
 kubectl apply -f k8s
-kubectl set image deployments/web-deployment web=alakae/trackz:$SHA
+kubectl -n trackz set image deployments/web-deployment web=alakae/trackz:$SHA
