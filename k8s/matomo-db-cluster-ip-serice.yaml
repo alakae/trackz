@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: matomo-db-cluster-ip-service
+  namespace: trackz
+spec:
+  type: ClusterIP
+  selector:
+    component: matomo-db
+  ports:
+    - port: 3306
+      targetPort: 3306

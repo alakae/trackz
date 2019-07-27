@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: matomo-db-deployment
+  namespace: trackz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: matomo-db
+  template:
+    metadata:
+      labels:
+        component: matomo-db
+    spec:
+      volumes:
+        - name: matomo-storage
+          persistentVolumeClaim:
+            claimName: matomo-db-persistent-volume-claim
+      containers:
+        - name: matomo-db
+          image: mariadb
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: matomo-storage
+              mountPath: /var/lib/mysql
+              subPath: matomo
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: matomo-db-secret
+                  key: mysql-root-password
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: matomo-db-secret
+                  key: mysql-password
+            - name: MYSQL_DATABASE
+              value: matomo
+            - name: MYSQL_USER
+              value: matomo
