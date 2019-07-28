@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: matomo-app-deployment
+  namespace: trackz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: matomo-app
+  template:
+    metadata:
+      labels:
+        component: matomo-app
+    spec:
+      volumes:
+        - name: matomo-storage
+          persistentVolumeClaim:
+            claimName: matomo-app-persistent-volume-claim
+      containers:
+        - name: matomo-app
+          image: matomo
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: matomo-storage
+              mountPath: /var/www/html
+              subPath: matomo
+          env:
+            - name: MATOMO_DATABASE_HOST
+              value: matomo-db-cluster-ip-service
+            - name: MATOMO_DATABASE_ADAPTER
+              value: mysql
+            - name: MATOMO_DATABASE_TABLES_PREFIX
+              value: matomo_
+            - name: MATOMO_DATABASE_USERNAME
+              value: matomo
+            - name: MATOMO_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: matomo-db-secret
+                  key: mysql-password
+            - name: MATOMO_DATABASE_DBNAME
+              value: matomo
