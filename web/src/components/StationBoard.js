@@ -12,7 +12,6 @@ class StationBoard extends React.Component {
     }
 
     updateDimensions = () => {
-        console.log('trigger');
         this.setState(() => ({
             innerWidth: window.innerWidth
         }));
