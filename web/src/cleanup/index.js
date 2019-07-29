@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from "moment-timezone";
 
 const groupBy = (xs, key) => xs.reduce((rv, x) => {
     (rv[x[key]] = rv[x[key]] || []).push(x);
@@ -6,7 +6,7 @@ const groupBy = (xs, key) => xs.reduce((rv, x) => {
 }, {});
 
 const extractInfo = (c) => {
-    const time = moment(c.time, "YYYY-MM-DD HH:mm:ss");
+    const time = moment.tz(c.time, "YYYY-MM-DD HH:mm:ss", "Europe/Zurich");
     if (time.isAfter(moment().add(90, 'minutes')) || time.isBefore(moment().subtract(90, 'minutes'))) {
         return undefined;
     }
