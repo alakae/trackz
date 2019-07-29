@@ -101,7 +101,7 @@ class StationBoardCanvas extends React.Component {
                                 x={0}
                                 y={trackSpacing / 3 + index * trackSpacing}
                                 text={track ? track : "?"}
-                                fontSize="15"
+                                fontSize={15}
                                 fill="white"
                                 fontStyle="bold"
                             />
@@ -164,10 +164,10 @@ class StationBoardCanvas extends React.Component {
                                 x={this.getY(train.arr_time)}
                                 y={trackSpacing + this.getTrackIndex(train.track) * trackSpacing + 4}
                                 text={train.line}
-                                fontSize="10"
+                                fontSize={10}
                                 fill="white"
                                 fontStyle="bold"
-                                strokeWidth="0.1"
+                                strokeWidth={0.1}
                             />
                         )
                     }
