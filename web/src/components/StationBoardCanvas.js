@@ -144,8 +144,6 @@ class StationBoardCanvas extends React.Component {
                 <Group>
                     {
                         this.props.data.filter(t => this.hasTrackChange(t.track)).map((train, index) => {
-                                const effectiveArrival = getEffectiveArrival(train);
-                                const effectiveDeparture = getEffectiveDeparture(train);
                                 return <Rect
                                     key={`train-delay-${index}`}
                                     x={this.getY(train.arr_time) - 2}
