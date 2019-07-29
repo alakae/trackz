@@ -1,13 +1,22 @@
 import React from 'react';
 import '../css/App.css';
-import {BrowserRouter as Router, Route, Link} from "react-router-dom";
+import {Router, Route, Link} from "react-router-dom";
+import {createBrowserHistory} from "history";
 import {Home} from "./Home";
 import {About} from "./About";
 import Stations from "./Stations";
 import StationBoards from "./StationBoards";
 
+const history = createBrowserHistory();
+history.listen((location, action) => {
+    // https://developer.matomo.org/guides/spa-tracking
+    const _paq = window._paq || [];
+    _paq.push(['setCustomUrl', window.location.pathname]);
+    _paq.push(['trackPageView']);
+});
+
 const App = () => (
-    <Router>
+    <Router history={history}>
         <div className="App">
             <header className="App-header">
                 <h1 className="App-title">trackz.ch</h1>
