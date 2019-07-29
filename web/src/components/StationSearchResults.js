@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
+import {Link} from "react-router-dom";
 
 class StationSearchResults extends Component {
     render() {
@@ -24,9 +25,9 @@ class StationSearchResults extends Component {
                 {
                     this.props.result.map((e, i) =>
                         <p key={`result-${i}`}>
-                            <a href={`station/${e.label}`}>
+                            <Link to={`station/${e.label}`}>
                                 {e.label}
-                            </a>
+                            </Link>
                         </p>
                     )
                 }
