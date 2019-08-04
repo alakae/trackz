@@ -4,6 +4,8 @@ import {arrivalSimplePassing} from "./fixtures/simplePassing/arrival";
 import {departureSimplePassing} from "./fixtures/simplePassing/departure";
 import {arrivalDelayedPassing} from "./fixtures/delayedPassing/arrival";
 import {departureDelayedPassing} from "./fixtures/delayedPassing/departure";
+import {arrivalStartingAndEnding} from "./fixtures/startingAndEnding/arrival";
+import {departureStartingAndEnding} from "./fixtures/startingAndEnding/departure";
 
 Date.now = jest.fn(() => 1561833582000); //2019-06-29T18:39:42+0000
 
@@ -47,4 +49,25 @@ it('test delayedPassing', () => {
     expect(train.number).toEqual("S10 25138");
     expect(train.terminals).toEqual([{"name": "Bellinzona"}]);
     expect(train.track).toEqual("4");
+});
+
+it('test startingAndEnding', () => {
+    // act
+    const result = cleanUp(arrivalStartingAndEnding, departureStartingAndEnding);
+
+    // assert
+    expect(result.name).toEqual("Uster");
+    expect(result.entries.length).toEqual(1);
+
+    const [train] = result.entries;
+    expect(train.color).toEqual("#039");
+    expect(train.line).toEqual("S9");
+    expect(train.operationType).toEqual("turn");
+    expect(train.arr_time.diff(moment("2019-06-29T19:20:00.000+0200"))).toEqual(0);
+    expect(train.arr_delay).toEqual(undefined);
+    expect(train.dep_time.diff(moment("2019-06-29T19:40:00.000+0200"))).toEqual(0);
+    expect(train.dep_delay).toEqual(undefined);
+    expect(train.number).toEqual("S9 18976");
+    expect(train.terminals).toEqual([{"name": "Schaffhausen"}]);
+    expect(train.track).toEqual("3");
 });
