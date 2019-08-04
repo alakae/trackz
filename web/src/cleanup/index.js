@@ -5,9 +5,9 @@ const groupBy = (xs, key) => xs.reduce((rv, x) => {
     return rv;
 }, {});
 
-const extractInfo = (c) => {
+const extractInfo = (c, boardTime) => {
     const time = moment.tz(c.time, "YYYY-MM-DD HH:mm:ss", "Europe/Zurich");
-    if (time.isAfter(moment().add(90, 'minutes')) || time.isBefore(moment().subtract(90, 'minutes'))) {
+    if (time.isAfter(boardTime.clone().add(90, 'minutes')) || time.isBefore(boardTime.clone().subtract(90, 'minutes'))) {
         return undefined;
     }
 
@@ -143,7 +143,7 @@ const matchStartAndEnds = (connections) => {
     return result;
 };
 
-const cleanUp = (arrivals, departures) => {
+const cleanUp = (arrivals, departures, boardtime = moment()) => {
     const name = arrivals.stop.name;
 
     arrivals = arrivals.connections.map(c => ({...c, sourceType: "arrival"}));
@@ -155,7 +155,7 @@ const cleanUp = (arrivals, departures) => {
     ];
 
     const postProcessed = all
-        .map(extractInfo)
+        .map(c => extractInfo(c, boardtime))
         .filter(c => c !== undefined);
 
     const matched = matchArrivalsAndDepartures(postProcessed);
