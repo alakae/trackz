@@ -8,10 +8,12 @@ import {arrivalStartingAndEnding} from "./fixtures/startingAndEnding/arrival";
 import {departureStartingAndEnding} from "./fixtures/startingAndEnding/departure";
 import {arrivalFluegelungBefore} from "./fixtures/fluegelungBefore/arrival";
 import {departureFluegelungBefore} from "./fixtures/fluegelungBefore/departure";
+import {departureFluegelungAt} from "./fixtures/fluegelungAt/departure";
+import {arrivalFluegelungAt} from "./fixtures/fluegelungAt/arrival";
 
 //Date.now = jest.fn(() => 1561833582000); //2019-06-29T18:39:42+0000
 
-it('test simplePassing', () => {
+test('test simplePassing', () => {
     // arrange
     const boardTime = moment("2019-06-29 19:19:00", "Europe/Zurich");
 
@@ -35,7 +37,7 @@ it('test simplePassing', () => {
     expect(train.track).toEqual("1");
 });
 
-it('test delayedPassing', () => {
+test('test delayedPassing', () => {
     // arrange
     const boardTime = moment("2019-06-29 21:22:00", "Europe/Zurich");
 
@@ -59,7 +61,7 @@ it('test delayedPassing', () => {
     expect(train.track).toEqual("4");
 });
 
-it('test startingAndEnding', () => {
+test('test startingAndEnding', () => {
     // arrange
     const boardTime = moment("2019-06-29 19:00:00", "Europe/Zurich");
 
@@ -83,7 +85,7 @@ it('test startingAndEnding', () => {
     expect(train.track).toEqual("3");
 });
 
-it('test fluegelungBefore', () => {
+test('test fluegelungBefore', () => {
     // arrange
     const boardTime = moment("2019-08-04 16:49:00", "Europe/Zurich");
 
@@ -92,6 +94,30 @@ it('test fluegelungBefore', () => {
 
     // assert
     expect(result.name).toEqual("Münsingen");
+    expect(result.entries.length).toEqual(1);
+
+    const [train] = result.entries;
+    expect(train.color).toEqual("#f00");
+    expect(train.line).toEqual("RE");
+    expect(train.operationType).toEqual("pass");
+    expect(train.arr_time.diff(moment("2019-08-04T17:49:00.000+0200"))).toEqual(0);
+    expect(train.arr_delay).toEqual(undefined);
+    expect(train.dep_time.diff(moment("2019-08-04T17:50:00.000+0200"))).toEqual(0);
+    expect(train.dep_delay).toEqual(undefined);
+    expect(train.number).toEqual("RE 4181");
+    expect(train.terminals).toEqual([{"name": "Zweisimmen"}, {"name": "Domodossola (I)"}]);
+    expect(train.track).toEqual("1");
+});
+
+test.skip('test fluegelungAt', () => {
+    // arrange
+    const boardTime = moment("2019-08-04 18:00:00", "Europe/Zurich");
+
+    // act
+    const result = cleanUp(arrivalFluegelungAt, departureFluegelungAt, boardTime);
+
+    // assert
+    expect(result.name).toEqual("Spiez");
     expect(result.entries.length).toEqual(1);
 
     const [train] = result.entries;
