@@ -5,8 +5,7 @@
 
 > Graphical arrival and departue board for railway stations in Switzerland.
 
-This is a just for fun project. I am using it to teach myself technologies such as [React](https://github.com/facebook/react),<br/>
-[React Konva](https://github.com/konvajs/react-konva), Docker, docker-compose, continous deployment to Kubernetes, etc.
+This is a just for fun project. I am using it to teach myself technologies such as [React](https://github.com/facebook/react), [React Konva](https://github.com/konvajs/react-konva), Docker, docker-compose, continous deployment to Kubernetes, etc.
 
 
 ## Using
