@@ -7,7 +7,9 @@ const groupBy = (xs, key) => xs.reduce((rv, x) => {
 
 const extractInfo = (c, boardTime) => {
     const time = moment.tz(c.time, "YYYY-MM-DD HH:mm:ss", "Europe/Zurich");
-    if (time.isAfter(boardTime.clone().add(90, 'minutes')) || time.isBefore(boardTime.clone().subtract(90, 'minutes'))) {
+    const intervalBegin = boardTime.clone().add(90, 'minutes');
+    const intervalEnd = boardTime.clone().subtract(90, 'minutes');
+    if (time.isAfter(intervalBegin) || time.isBefore(intervalEnd)) {
         return undefined;
     }
 
@@ -117,9 +119,13 @@ const matchStartAndEnds = (connections) => {
     const startsAndEnds = connections.filter(c => c.operationType === "start" || c.operationType === "end");
 
     const trackGroups = groupBy(startsAndEnds, 'track');
+
     Object.values(trackGroups).forEach((trackGroup) => {
         const lineGroups = groupBy(trackGroup, 'line');
         Object.values(lineGroups).forEach((lineGroup) => {
+            if (lineGroup.length === 1) {
+                return result.push(lineGroup[0]);
+            }
             const sorted = lineGroup.sort((left, right) => moment.utc(left.time).diff(moment.utc(right.time)));
             for (let i = 0; i < sorted.length - 1; i++) {
                 const current = sorted[i];
