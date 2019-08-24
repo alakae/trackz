@@ -40,7 +40,8 @@ const checkSuccess = (response) => {
 export const loadStationBoard = (name) => {
     return (dispatch) => {
         dispatch(setIsLoading(true));
-        const t = moment().subtract(1, 'hours').format("HH:mm");
+        const boardTime = moment();
+        const t = boardTime.clone().subtract(1, 'hours').format("HH:mm");
         const departureUrl = `https://timetable.search.ch/api/stationboard.json?stop=${name}&&show_tracks=true&&show_delays=true&&show_trackchanges=true&&mode=depart&time=${t}`;
         const arrivalUrl = `https://timetable.search.ch/api/stationboard.json?stop=${name}&&show_tracks=true&&show_delays=true&&show_trackchanges=true&&mode=arrival&time=${t}`;
 
@@ -54,7 +55,7 @@ export const loadStationBoard = (name) => {
 
         Promise.all([arrivalPromise, departurePromise])
             .then(([arrivals, departures]) => {
-                dispatch(setResult(cleanUp(arrivals, departures)));
+                dispatch(setResult(cleanUp(arrivals, departures, boardTime)));
             })
             .catch((e) => {
                 console.log(e);
