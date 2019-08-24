@@ -13,7 +13,7 @@ class StationBoardCanvas extends React.Component {
     collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
     getTracks() {
-        const tracks = Array.from(new Set(this.props.data.map(c => this.getEffectiveTrack(c.track))));
+        const tracks = Array.from(new Set(this.props.data.map(c => this.getEffectiveTrack(c.track_numerical))));
         return tracks.sort(this.collator.compare);
     }
 
@@ -114,7 +114,7 @@ class StationBoardCanvas extends React.Component {
                                 return <Rect
                                     key={`train-${index}`}
                                     x={this.getY(train.arr_time)}
-                                    y={trackSpacing + this.getTrackIndex(train.track) * trackSpacing - trainHeight / 2}
+                                    y={trackSpacing + this.getTrackIndex(train.track_numerical) * trackSpacing - trainHeight / 2}
                                     height={trainHeight}
                                     width={this.getWidth(train.dep_time, train.arr_time)}
                                     fill={train.color}
@@ -132,7 +132,7 @@ class StationBoardCanvas extends React.Component {
                                 return <Rect
                                     key={`train-delay-${index}`}
                                     x={this.getY(effectiveArrival)}
-                                    y={trackSpacing + this.getTrackIndex(train.track) * trackSpacing - trainHeight / 2}
+                                    y={trackSpacing + this.getTrackIndex(train.track_numerical) * trackSpacing - trainHeight / 2}
                                     height={trainHeight}
                                     width={this.getWidth(effectiveDeparture, effectiveArrival)}
                                     stroke={getIsCancelled(train) ? "black" : "orange"}
@@ -143,11 +143,11 @@ class StationBoardCanvas extends React.Component {
                 </Group>
                 <Group>
                     {
-                        this.props.data.filter(t => this.hasTrackChange(t.track)).map((train, index) => {
+                        this.props.data.filter(t => this.hasTrackChange(t.track_numerical)).map((train, index) => {
                                 return <Rect
                                     key={`train-delay-${index}`}
                                     x={this.getY(train.arr_time) - 2}
-                                    y={(trackSpacing + this.getTrackIndex(train.track) * trackSpacing - trainHeight / 2) - 2}
+                                    y={(trackSpacing + this.getTrackIndex(train.track_numerical) * trackSpacing - trainHeight / 2) - 2}
                                     height={trainHeight + 4}
                                     width={this.getWidth(train.dep_time, train.arr_time) + 4}
                                     stroke="green"
@@ -162,7 +162,7 @@ class StationBoardCanvas extends React.Component {
                             <Text
                                 key={`train-label-${index}`}
                                 x={this.getY(train.arr_time)}
-                                y={trackSpacing + this.getTrackIndex(train.track) * trackSpacing + 4}
+                                y={trackSpacing + this.getTrackIndex(train.track_numerical) * trackSpacing + 4}
                                 text={train.line}
                                 fontSize={10}
                                 fill="white"

@@ -22,6 +22,7 @@ const extractInfo = (c, boardTime) => {
         line: c.line,
         number: c.number,
         track: c.track,
+        track_numerical: c.track ? c.track.replace(/[A-Z]/g,'') : undefined,
         terminals: [{
             name: c.terminal.name,
         }],
@@ -118,7 +119,7 @@ const matchStartAndEnds = (connections) => {
     const result = connections.filter(c => c.operationType === "pass");
     const startsAndEnds = connections.filter(c => c.operationType === "start" || c.operationType === "end");
 
-    const trackGroups = groupBy(startsAndEnds, 'track');
+    const trackGroups = groupBy(startsAndEnds, 'track_numerical');
 
     Object.values(trackGroups).forEach((trackGroup) => {
         const lineGroups = groupBy(trackGroup, 'line');
