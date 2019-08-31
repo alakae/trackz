@@ -41,9 +41,11 @@ export const loadStationBoard = (name) => {
     return (dispatch) => {
         dispatch(setIsLoading(true));
         const boardTime = moment();
-        const t = boardTime.clone().subtract(1, 'hours').format("HH:mm");
-        const departureUrl = `https://timetable.search.ch/api/stationboard.json?stop=${name}&&show_tracks=true&&show_delays=true&&show_trackchanges=true&&mode=depart&time=${t}`;
-        const arrivalUrl = `https://timetable.search.ch/api/stationboard.json?stop=${name}&&show_tracks=true&&show_delays=true&&show_trackchanges=true&&mode=arrival&time=${t}`;
+        const minusOneHour = boardTime.clone().subtract(1, 'hours');
+        const t = minusOneHour.format("HH:mm");
+        const d = minusOneHour.format("MM/DD/YYYY");
+        const departureUrl = `https://timetable.search.ch/api/stationboard.json?stop=${name}&&show_tracks=true&&show_delays=true&&show_trackchanges=true&&mode=depart&time=${t}&date=${d}`;
+        const arrivalUrl = `https://timetable.search.ch/api/stationboard.json?stop=${name}&&show_tracks=true&&show_delays=true&&show_trackchanges=true&&mode=arrival&time=${t}&date=${d}`;
 
 
         const arrivalPromise = fetch(arrivalUrl)
