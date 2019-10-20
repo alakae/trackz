@@ -53,13 +53,14 @@ class StationBoardTable extends React.Component {
                     <thead>
                     <tr>
                         <th>Line</th>
-                        <th>Arr</th>
-                        <th></th>
+                        <th className="additionalInfo">Arr</th>
+                        <th className="additionalInfo"></th>
                         <th>Dep</th>
                         <th></th>
                         <th className="additionalInfo">Number</th>
                         <th>Terminal</th>
                         <th>Track</th>
+                        <th>Unit</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -77,8 +78,8 @@ class StationBoardTable extends React.Component {
                                             </a>
                                         </span>
                                     </td>
-                                    <td>{t.operationType !== "start" && t.arr_time.format('HH:mm')}</td>
-                                    <td>{t.arr_delay}</td>
+                                    <td className="additionalInfo">{t.operationType !== "start" && t.arr_time.format('HH:mm')}</td>
+                                    <td className="additionalInfo">{t.arr_delay}</td>
                                     <td>{t.operationType !== "end" && t.dep_time.format('HH:mm')}</td>
                                     <td>{t.dep_delay}</td>
                                     <td className="additionalInfo">
@@ -89,8 +90,9 @@ class StationBoardTable extends React.Component {
                                         {
                                             t.terminals.map((terminal, index) =>
                                                 [
-                                                    index !== 0 ? ', ': '',
+                                                    index !== 0 ? ', ' : '',
                                                     <a
+                                                        key={index}
                                                         href={`/station/${terminal.name}`}>
                                                         {`${terminal.name}`}
                                                     </a>
@@ -100,6 +102,15 @@ class StationBoardTable extends React.Component {
 
                                     </td>
                                     <td>{t.track}</td>
+                                    <td>
+                                        <form
+                                            action="http://www.reisezuege.ch/index.php"
+                                            method="post">
+                                            <input name="znummer" type="hidden" value={t.number.split(' ')[1]}/>
+                                            <input name="action" type="hidden" value="1"/>
+                                            <input className="reisezuegeSubmit" type="submit" value="Lookup"/>
+                                        </form>
+                                    </td>
                                 </tr>
                             )
                     }
