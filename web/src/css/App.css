@@ -37,8 +37,12 @@ a:visited {
     margin-top: 25px;
 }
 
-.stationBoardTableContainer input {
+.stationBoardTableContainer input[type=radio] {
     display: none;
+}
+
+.stationBoardTableContainer button[type=submit] {
+    cursor: pointer;
 }
 
 .stationBoardTableContainer label {
@@ -78,6 +82,12 @@ a:visited {
 
 .stationBoardTable td a:link {
     text-decoration: none;
+}
+
+.reisezuegeSubmit {
+    border: 0;
+    color: unset;
+    background: unset;
 }
 
 @media (max-width: 700px) {
