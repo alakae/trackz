@@ -4,6 +4,8 @@ import Color from 'color';
 import moment from "moment";
 import {getEffectiveDeparture} from "../delay";
 import {setFilter} from "../actions/stationBoard";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCalendar, faTrain, faAlignJustify} from '@fortawesome/free-solid-svg-icons'
 
 function getPrefix(e) {
     switch (e.operationType) {
@@ -59,8 +61,8 @@ class StationBoardTable extends React.Component {
                         <th></th>
                         <th className="additionalInfo">Number</th>
                         <th>Terminal</th>
-                        <th>Track</th>
-                        <th>Unit</th>
+                        <th><FontAwesomeIcon icon={faAlignJustify} /></th>
+                        <th><FontAwesomeIcon icon={faTrain} /></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -108,7 +110,9 @@ class StationBoardTable extends React.Component {
                                             method="post">
                                             <input name="znummer" type="hidden" value={t.number.split(' ')[1]}/>
                                             <input name="action" type="hidden" value="1"/>
-                                            <input className="reisezuegeSubmit" type="submit" value="Lookup"/>
+                                            <button type="submit" className="reisezuegeSubmit" value="Lookup">
+                                                <FontAwesomeIcon icon={faCalendar} />
+                                            </button>
                                         </form>
                                     </td>
                                 </tr>

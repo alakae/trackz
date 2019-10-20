@@ -41,6 +41,10 @@ a:visited {
     display: none;
 }
 
+.stationBoardTableContainer button[type=submit] {
+    cursor: pointer;
+}
+
 .stationBoardTableContainer label {
     margin: 2px;
     padding: 4px 6px;
