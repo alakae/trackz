@@ -14,6 +14,8 @@ import {departureStarting} from "./fixtures/starting/departure";
 import {arrivalStarting} from "./fixtures/starting/arrival";
 import {arrivalTrackNumber} from "./fixtures/trackNumber/arrival";
 import {departureTrackNumber} from "./fixtures/trackNumber/departure";
+import {arrivalStartingAndEndingTrackNumberMissing} from "./fixtures/startingAndEndingTrackNumberMissing/arrival";
+import {departureStartingAndEndingTrackNumberMissing} from "./fixtures/startingAndEndingTrackNumberMissing/departure";
 
 //Date.now = jest.fn(() => 1561833582000); //2019-06-29T18:39:42+0000
 
@@ -184,4 +186,33 @@ test('test trackNumber with letters', () => {
     expect(train.terminals).toEqual([{"name": "Belp"}]);
     expect(train.track).toEqual("1AB");
     expect(train.track_numerical).toEqual("1");
+});
+
+test('test trackNumber missing in arrival data', () => {
+    // arrange
+    const boardTime = moment("2019-10-15 20:00:00", "Europe/Zurich");
+
+    // act
+    const result = cleanUp(
+        arrivalStartingAndEndingTrackNumberMissing,
+        departureStartingAndEndingTrackNumberMissing,
+        boardTime
+    );
+
+    // assert
+    expect(result.name).toEqual("Zürich Oerlikon");
+    expect(result.entries.length).toEqual(1);
+
+    const [train] = result.entries;
+    expect(train.color).toEqual("#f00");
+    expect(train.line).toEqual("IR 36");
+    expect(train.operationType).toEqual("turn");
+    expect(train.arr_time.diff(moment("2019-11-15T19:57:00.000+0100"))).toEqual(0);
+    expect(train.arr_delay).toEqual(undefined);
+    expect(train.dep_time.diff(moment("2019-11-15T20:02:00.000+0100"))).toEqual(0);
+    expect(train.dep_delay).toEqual(undefined);
+    expect(train.number).toEqual("IR 2086");
+    expect(train.terminals).toEqual([{"name": "Basel SBB"}]);
+    expect(train.track).toEqual("3");
+    expect(train.track_numerical).toEqual("3");
 });

@@ -117,14 +117,21 @@ const matchArrivalsAndDepartures = (all) => {
 
 const matchStartAndEnds = (connections) => {
     const result = connections.filter(c => c.operationType === "pass");
-    const startsAndEnds = connections.filter(c => c.operationType === "start" || c.operationType === "end");
+    const startsAndEnds = connections
+        .filter(c => c.operationType === "start" || c.operationType === "end")
+        .map(c => ({...c, used: false}));
 
     const trackGroups = groupBy(startsAndEnds, 'track_numerical');
+    trackGroups[undefined] = trackGroups[undefined] ? trackGroups[undefined] : [];
+
 
     Object.values(trackGroups).forEach((trackGroup) => {
-        const lineGroups = groupBy(trackGroup, 'line');
-        Object.values(lineGroups).forEach((lineGroup) => {
+        const combined = trackGroup.concat(trackGroups[undefined]);
+        const lineGroups = groupBy(combined, 'line');
+        Object.values(lineGroups).forEach((lg) => {
+            const lineGroup = lg.filter(c => !c.used);
             if (lineGroup.length === 1) {
+                lineGroup[0].used = true;
                 return result.push(lineGroup[0]);
             }
             const sorted = lineGroup.sort((left, right) => moment.utc(left.time).diff(moment.utc(right.time)));
@@ -138,9 +145,13 @@ const matchStartAndEnds = (connections) => {
                     turn.operationType = "turn";
                     turn.arr_time = end.arr_time;
                     turn.arr_delay = end.arr_delay;
+
+                    current.used = true;
+                    next.used = true;
                     result.push(turn);
                     ++i; // next has been matched, skip 1
                 } else {
+                    current.used = true;
                     result.push(current);
                 }
             }
