@@ -20,7 +20,7 @@ const extractInfo = (c, boardTime) => {
         arr_delay: c.arr_delay !== "+0" ? c.arr_delay : undefined,
         dep_delay: c.dep_delay !== "+0" ? c.dep_delay : undefined,
         line: c.line,
-        number: c.number,
+        number: c['*Z'],
         track: c.track,
         track_numerical: c.track ? c.track.replace(/[A-Z]/g,'') : undefined,
         terminals: [{
@@ -68,6 +68,7 @@ const isFluegelung = (g) => {
 
 const matchArrivalsAndDepartures = (all) => {
     const withNumber = all.filter(t => t.number);
+    console.log(all);
     const groups = groupBy(withNumber, 'number');
     return Object.values(groups).map((g) => {
         if (isPass(g)) {
