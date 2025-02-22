@@ -3,7 +3,12 @@ import { useEffect, useState } from "react";
 import { StationBoardResponse } from "./api/stationBoardResponse.ts";
 import "./StationBoard.css";
 import { processConnections } from "./processConnections.ts";
-import { DisplayConnection } from "./display/displayConnection.ts";
+import {
+  ArrivalConnection,
+  DepartureConnection,
+  DisplayConnection,
+  PassingConnection,
+} from "./display/displayConnection.ts";
 
 export const StationBoard = () => {
   const { label } = useParams<{ label: string }>();
@@ -65,7 +70,8 @@ export const StationBoard = () => {
         <table>
           <thead>
             <tr>
-              <th>Time</th>
+              <th>Arrival Time</th>
+              <th>Departure Time</th>
               <th>Mode</th>
               <th>Line</th>
               <th>Terminal</th>
@@ -76,21 +82,53 @@ export const StationBoard = () => {
           <tbody>
             {connections.map((connection, index) => {
               const [bgColor, textColor] = connection.color.split("~");
-              const arrDelay =
-                connection.arr_delay !== "+0" ? connection.arr_delay : null;
-              const depDelay =
-                connection.dep_delay !== "+0" ? connection.dep_delay : null;
+
+              const formatTime = (timestamp: string | undefined) => {
+                if (!timestamp) return "";
+                return new Date(timestamp).toLocaleTimeString("de-CH", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+              };
+
+              const getArrivalTime = () => {
+                if (
+                  connection.mode === "Arrival" ||
+                  connection.mode === "Passing"
+                ) {
+                  const arrDelay =
+                    connection.arr_delay !== "+0"
+                      ? ` (${connection.arr_delay})`
+                      : "";
+                  return `${formatTime(
+                    (connection as ArrivalConnection | PassingConnection)
+                      .arrival_time,
+                  )}${arrDelay}`;
+                }
+                return "";
+              };
+
+              const getDepartureTime = () => {
+                if (
+                  connection.mode === "Departure" ||
+                  connection.mode === "Passing"
+                ) {
+                  const depDelay =
+                    connection.dep_delay !== "+0"
+                      ? ` (${connection.dep_delay})`
+                      : "";
+                  return `${formatTime(
+                    (connection as DepartureConnection | PassingConnection)
+                      .departure_time,
+                  )}${depDelay}`;
+                }
+                return "";
+              };
 
               return (
-                <tr key={`${connection.time}-${index}`}>
-                  <td>
-                    {new Date(connection.time).toLocaleTimeString("de-CH", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                    {arrDelay && ` (Arr: ${arrDelay})`}
-                    {depDelay && ` (Dep: ${depDelay})`}
-                  </td>
+                <tr key={`${connection.mode}-${index}`}>
+                  <td>{getArrivalTime()}</td>
+                  <td>{getDepartureTime()}</td>
                   <td>{connection.mode}</td>
                   <td
                     style={{

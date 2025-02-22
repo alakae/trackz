@@ -1,26 +1,24 @@
 import { StationBoardResponse } from "./api/stationBoardResponse.ts";
-import { DisplayConnection, Mode } from "./display/displayConnection.ts";
+import {
+  ArrivalConnection,
+  DepartureConnection,
+  DisplayConnection,
+  PassingConnection,
+} from "./display/displayConnection.ts";
 
 const findMatchingDeparture = (
-  arrival: DisplayConnection,
-  departures: DisplayConnection[],
+  arrival: ArrivalConnection,
+  departures: DepartureConnection[],
   allConnections: DisplayConnection[],
-): DisplayConnection | undefined => {
+): DepartureConnection | undefined => {
   return departures.find((departure) => {
-    // Check if same line and track
-    if (
-      arrival.line !== departure.line ||
-      // arrival.track !== departure.track ||
-      arrival["*Z"] !== departure["*Z"]
-    ) {
+    if (arrival.line !== departure.line || arrival["*Z"] !== departure["*Z"]) {
       return false;
     }
 
-    // Check if departure is at same time or after arrival
-    const arrivalTime = new Date(arrival.time).getTime();
-    const departureTime = new Date(departure.time).getTime();
+    const arrivalTime = new Date(arrival.arrival_time).getTime();
+    const departureTime = new Date(departure.departure_time).getTime();
 
-    // Allow same time or up to 45 minutes difference
     if (
       departureTime < arrivalTime ||
       departureTime - arrivalTime > 45 * 60 * 1000
@@ -28,9 +26,10 @@ const findMatchingDeparture = (
       return false;
     }
 
-    // Check if no other train uses the track in between
     const trackConflict = allConnections.some((conn) => {
-      const connTime = new Date(conn.time).getTime();
+      const connTime = new Date(
+        conn.mode === "Departure" ? conn.departure_time : conn.arrival_time,
+      ).getTime();
       return (
         conn.track === arrival.track &&
         connTime > arrivalTime &&
@@ -55,28 +54,44 @@ export const processConnections = (
   const allConnections: DisplayConnection[] = [
     ...departureData.connections.map((conn) => ({
       ...conn,
-      mode: "Departure" as Mode,
+      mode: "Departure" as const,
+      departure_time: conn.time, // Map time to departure_time
+      dep_delay: conn.dep_delay,
     })),
     ...arrivalData.connections.map((conn) => ({
       ...conn,
-      mode: "Arrival" as Mode,
+      mode: "Arrival" as const,
+      arrival_time: conn.time, // Map time to arrival_time
+      arr_delay: conn.arr_delay,
     })),
   ].filter((conn) => {
-    const connTime = new Date(conn.time).getTime();
+    const connTime = new Date(
+      conn.mode === "Departure" ? conn.departure_time : conn.arrival_time,
+    ).getTime();
     return connTime >= now && connTime <= twoHoursFromNow;
   });
 
   // Sort by time
-  allConnections.sort(
-    (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
-  );
+  allConnections.sort((a, b) => {
+    const timeA = new Date(
+      a.mode === "Departure" ? a.departure_time : a.arrival_time,
+    ).getTime();
+    const timeB = new Date(
+      b.mode === "Departure" ? b.departure_time : b.arrival_time,
+    ).getTime();
+    return timeA - timeB;
+  });
 
   const processedConnections: DisplayConnection[] = [];
   const usedConnections = new Set<DisplayConnection>();
 
   // Process arrivals to find passing trains
-  const arrivals = allConnections.filter((conn) => conn.mode === "Arrival");
-  const departures = allConnections.filter((conn) => conn.mode === "Departure");
+  const arrivals = allConnections.filter(
+    (conn): conn is ArrivalConnection => conn.mode === "Arrival",
+  );
+  const departures = allConnections.filter(
+    (conn): conn is DepartureConnection => conn.mode === "Departure",
+  );
 
   for (const arrival of arrivals) {
     if (usedConnections.has(arrival)) continue;
@@ -89,18 +104,19 @@ export const processConnections = (
 
     if (matchingDeparture && !usedConnections.has(matchingDeparture)) {
       // Create a passing train entry
-      processedConnections.push({
+      const passingConnection: PassingConnection = {
         ...matchingDeparture,
-        mode: "Passing" as Mode,
-        time: matchingDeparture.time,
+        mode: "Passing",
+        arrival_time: arrival.arrival_time,
+        departure_time: matchingDeparture.departure_time,
         arr_delay: arrival.arr_delay,
         dep_delay: matchingDeparture.dep_delay,
-      });
+      };
 
+      processedConnections.push(passingConnection);
       usedConnections.add(arrival);
       usedConnections.add(matchingDeparture);
     } else {
-      // Keep as regular arrival
       processedConnections.push(arrival);
       usedConnections.add(arrival);
     }
@@ -113,7 +129,14 @@ export const processConnections = (
     }
   }
 
-  return processedConnections.sort(
-    (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime(),
-  );
+  // Sort by arrival_time or departure_time
+  return processedConnections.sort((a, b) => {
+    const timeA = new Date(
+      a.mode === "Departure" ? a.departure_time : a.arrival_time,
+    ).getTime();
+    const timeB = new Date(
+      b.mode === "Departure" ? b.departure_time : b.arrival_time,
+    ).getTime();
+    return timeA - timeB;
+  });
 };
