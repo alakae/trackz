@@ -15,12 +15,12 @@ export const StationTable = ({ connections }: StationTableProps) => {
       <table>
         <thead>
           <tr>
-            <th>Arrival Time</th>
-            <th>Departure Time</th>
             <th>Mode</th>
             <th>Line</th>
-            <th>Terminal</th>
             <th>*Z</th>
+            <th>Arrival Time</th>
+            <th>Departure Time</th>
+            <th>Terminal</th>
             <th>Track</th>
           </tr>
         </thead>
@@ -72,8 +72,6 @@ export const StationTable = ({ connections }: StationTableProps) => {
 
             return (
               <tr key={`${connection.mode}-${index}`}>
-                <td>{getArrivalTime()}</td>
-                <td>{getDepartureTime()}</td>
                 <td>{connection.mode}</td>
                 <td
                   style={{
@@ -83,8 +81,10 @@ export const StationTable = ({ connections }: StationTableProps) => {
                 >
                   {connection.line}
                 </td>
-                <td>{connection.terminal.name}</td>
                 <td>{connection["*Z"]}</td>
+                <td>{getArrivalTime()}</td>
+                <td>{getDepartureTime()}</td>
+                <td>{connection.terminal.name}</td>
                 <td>{connection.track}</td>
               </tr>
             );
