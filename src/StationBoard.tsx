@@ -21,12 +21,12 @@ export const StationBoard = () => {
           fetch(
             `https://search.ch/timetable/api/stationboard.json?stop=${encodeURIComponent(
               label ?? "",
-            )}&show_tracks=1&show_delays=1&mode=departure`,
+            )}&show_tracks=1&show_delays=1&mode=departure&transportation_types=train`,
           ),
           fetch(
             `https://search.ch/timetable/api/stationboard.json?stop=${encodeURIComponent(
               label ?? "",
-            )}&show_tracks=1&show_delays=1&mode=arrival`,
+            )}&show_tracks=1&show_delays=1&mode=arrival&transportation_types=train`,
           ),
         ]);
 
