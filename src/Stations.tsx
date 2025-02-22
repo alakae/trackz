@@ -7,15 +7,18 @@ export const Stations = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState<Station[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchStations = async () => {
       if (searchTerm.length < 2) {
         setResults([]);
+        setError(null);
         return;
       }
 
       setIsLoading(true);
+      setError(null);
       try {
         const response = await fetch(
           `https://search.ch/timetable/api/completion.json?term=${encodeURIComponent(searchTerm)}`,
@@ -30,6 +33,7 @@ export const Stations = () => {
         setResults(filteredResults);
       } catch (error) {
         console.error("Error fetching stations:", error);
+        setError("Failed to fetch stations. Please try again.");
       } finally {
         setIsLoading(false);
       }
@@ -58,6 +62,7 @@ export const Stations = () => {
         />
 
         {isLoading && <div className="loading">Loading...</div>}
+        {error && <div className="error-message">{error}</div>}
 
         <div className="results-container">
           {results.map((station, index) => (
