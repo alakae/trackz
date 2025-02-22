@@ -1,6 +1,7 @@
 import { useState, useEffect, ChangeEvent } from "react";
 import "./Stations.css";
 import { Station } from "./api/station.ts";
+import DOMPurify from "dompurify";
 
 export const Stations = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -62,7 +63,11 @@ export const Stations = () => {
           {results.map((station, index) => (
             <div key={index} className="station-item">
               <i className={station.iconclass}></i>
-              <span dangerouslySetInnerHTML={{ __html: station.html }}></span>
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(station.html),
+                }}
+              ></span>
             </div>
           ))}
         </div>
