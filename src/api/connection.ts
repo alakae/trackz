@@ -11,4 +11,7 @@ export interface Connection {
   "*G": string; // e.g., "S"
   "*L": string; // e.g., "40", "13"
   "*Z": string; // e.g., "016951"
+  track: string; // e.g., "6"
+  arr_delay: string; // e.g., "+0"
+  dep_delay: string; // e.g., "+0"
 }

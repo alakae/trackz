@@ -52,11 +52,17 @@ export const StationBoard = () => {
               <th>Line</th>
               <th>Terminal</th>
               <th>*Z</th>
+              <th>Track</th>
             </tr>
           </thead>
           <tbody>
             {departures.map((departure, index) => {
               const [bgColor, textColor] = departure.color.split("~");
+              const arrDelay =
+                departure.arr_delay !== "+0" ? departure.arr_delay : null;
+              const depDelay =
+                departure.dep_delay !== "+0" ? departure.dep_delay : null;
+
               return (
                 <tr key={`${departure.time}-${index}`}>
                   <td>
@@ -64,6 +70,8 @@ export const StationBoard = () => {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
+                    {arrDelay && ` (Arr: ${arrDelay})`}
+                    {depDelay && ` (Dep: ${depDelay})`}
                   </td>
                   <td
                     style={{
@@ -75,6 +83,7 @@ export const StationBoard = () => {
                   </td>
                   <td>{departure.terminal.name}</td>
                   <td>{departure["*Z"]}</td>
+                  <td>{departure.track}</td>
                 </tr>
               );
             })}
