@@ -22,7 +22,7 @@ export const Stations = () => {
       setError(null);
       try {
         const response = await fetch(
-          `https://search.ch/timetable/api/completion.json?term=${encodeURIComponent(searchTerm)}`,
+          `https://search.ch/timetable/api/completion.json?show_ids=1&term=${encodeURIComponent(searchTerm)}`,
         );
         const data = await response.json();
         const filteredResults = data.filter((r: Station) => {
@@ -68,7 +68,7 @@ export const Stations = () => {
         <div className="results-container">
           {results.map((station, index) => (
             <Link
-              to={`/station/${station.label}`}
+              to={`/station/${station.id}`}
               key={index}
               className="station-item"
               style={{
