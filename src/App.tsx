@@ -3,6 +3,7 @@ import "./App.css";
 import { Home } from "./Home.tsx";
 import { Stations } from "./Stations.tsx";
 import { About } from "./About.tsx";
+import { StationBoard } from "./StationBoard.tsx";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/stations" element={<Stations />} />
+          <Route path="/station/:label" element={<StationBoard />} />
           <Route path="/about" element={<About />} />
         </Routes>
       </div>

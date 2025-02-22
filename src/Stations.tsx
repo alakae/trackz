@@ -1,4 +1,5 @@
 import { useState, useEffect, ChangeEvent } from "react";
+import { Link } from "react-router-dom";
 import "./Stations.css";
 import { Station } from "./api/station.ts";
 import DOMPurify from "dompurify";
@@ -66,14 +67,23 @@ export const Stations = () => {
 
         <div className="results-container">
           {results.map((station, index) => (
-            <div key={index} className="station-item">
+            <Link
+              to={`/station/${station.label}`}
+              key={index}
+              className="station-item"
+              style={{
+                cursor: "pointer",
+                display: "block",
+                textDecoration: "none",
+              }}
+            >
               <i className={station.iconclass}></i>
               <span
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(station.html),
                 }}
               ></span>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
