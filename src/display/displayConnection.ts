@@ -1,7 +1,7 @@
 // Base interface with common properties
 import { Terminal } from "../api/terminal.ts";
 
-export type Mode = "Departure" | "Arrival" | "Passing";
+export type Mode = "Departure" | "Arrival" | "Passing" | "Terminal";
 
 interface BaseConnection {
   type: string;
@@ -38,8 +38,17 @@ export interface PassingConnection extends BaseConnection {
   dep_delay: string;
 }
 
+export interface TerminalConnection extends BaseConnection {
+  mode: "Terminal";
+  arrival_time: string;
+  departure_time: string;
+  arr_delay: string;
+  dep_delay: string;
+}
+
 // Combined type for all connection types
 export type DisplayConnection =
   | ArrivalConnection
   | DepartureConnection
-  | PassingConnection;
+  | PassingConnection
+  | TerminalConnection;

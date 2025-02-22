@@ -39,7 +39,8 @@ export const StationTable = ({ connections }: StationTableProps) => {
             const getArrivalTime = () => {
               if (
                 connection.mode === "Arrival" ||
-                connection.mode === "Passing"
+                connection.mode === "Passing" ||
+                connection.mode === "Terminal"
               ) {
                 const arrDelay =
                   connection.arr_delay && connection.arr_delay !== "+0"
@@ -56,7 +57,8 @@ export const StationTable = ({ connections }: StationTableProps) => {
             const getDepartureTime = () => {
               if (
                 connection.mode === "Departure" ||
-                connection.mode === "Passing"
+                connection.mode === "Passing" ||
+                connection.mode === "Terminal"
               ) {
                 const depDelay =
                   connection.dep_delay && connection.dep_delay !== "+0"
