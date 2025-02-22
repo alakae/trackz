@@ -20,9 +20,12 @@ export const Stations = () => {
           `https://search.ch/timetable/api/completion.json?term=${encodeURIComponent(searchTerm)}`,
         );
         const data = await response.json();
-        const filteredResults = data.filter(
-          (r: Station) => r.iconclass === "sl-icon-type-train",
-        );
+        const filteredResults = data.filter((r: Station) => {
+          return (
+            r.iconclass === "sl-icon-type-train" ||
+            r.iconclass === "sl-icon-type-strain"
+          );
+        });
         setResults(filteredResults);
       } catch (error) {
         console.error("Error fetching stations:", error);
