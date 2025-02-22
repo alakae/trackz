@@ -25,6 +25,9 @@ body {
   background-color: #1a1a1a;
   padding: 1rem 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  width: 100vw;
+  position: relative;
+  left: 0;
 }
 
 .nav-list {
