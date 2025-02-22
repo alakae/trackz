@@ -1,28 +1,28 @@
-.departures-table {
+.station-table {
     margin-top: 20px;
     width: 100%;
     overflow-x: auto;
 }
 
-.departures-table table {
+.station-table table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.departures-table th,
-.departures-table td {
+.station-table th,
+.station-table td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
 
-.departures-table th {
+.station-table th {
     background-color: #f5f5f5;
     font-weight: bold;
     color: #333;
 }
 
-.departures-table tr:hover {
+.station-table tr:hover {
     background-color: #f8f8f8;
     color: #333;
 }

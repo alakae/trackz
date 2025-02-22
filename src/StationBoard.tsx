@@ -1,33 +1,49 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Connection } from "./api/connection.ts";
 import { StationBoardResponse } from "./api/stationBoardResponse.ts";
 import "./StationBoard.css";
+import { processConnections } from "./processConnections.ts";
+import { DisplayConnection } from "./display/displayConnection.ts";
 
 export const StationBoard = () => {
   const { label } = useParams<{ label: string }>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [departures, setDepartures] = useState<Connection[]>([]);
+  const [connections, setConnections] = useState<DisplayConnection[]>([]);
   const [stationName, setStationName] = useState<string>("");
 
   useEffect(() => {
     const fetchStationBoard = async () => {
       setLoading(true);
       try {
-        const response = await fetch(
-          `https://search.ch/timetable/api/stationboard.json?stop=${encodeURIComponent(
-            label ?? "",
-          )}&show_tracks=1&show_delays=1`,
-        );
+        const [departureResponse, arrivalResponse] = await Promise.all([
+          fetch(
+            `https://search.ch/timetable/api/stationboard.json?stop=${encodeURIComponent(
+              label ?? "",
+            )}&show_tracks=1&show_delays=1&mode=departure`,
+          ),
+          fetch(
+            `https://search.ch/timetable/api/stationboard.json?stop=${encodeURIComponent(
+              label ?? "",
+            )}&show_tracks=1&show_delays=1&mode=arrival`,
+          ),
+        ]);
 
-        if (!response.ok) {
+        if (!departureResponse.ok || !arrivalResponse.ok) {
           throw new Error("Failed to fetch station board data");
         }
 
-        const data: StationBoardResponse = await response.json();
-        setDepartures(data.connections);
-        setStationName(data.stop.name);
+        const departureData: StationBoardResponse =
+          await departureResponse.json();
+        const arrivalData: StationBoardResponse = await arrivalResponse.json();
+
+        const sortedConnections = processConnections(
+          departureData,
+          arrivalData,
+        );
+
+        setConnections(sortedConnections);
+        setStationName(departureData.stop.name);
         setLoading(false);
       } catch (err) {
         setError("Failed to load station board");
@@ -44,11 +60,13 @@ export const StationBoard = () => {
   return (
     <div className="page-container">
       <h1>Station Board - {stationName}</h1>
-      <div className="departures-table">
+
+      <div className="station-table">
         <table>
           <thead>
             <tr>
               <th>Time</th>
+              <th>Mode</th>
               <th>Line</th>
               <th>Terminal</th>
               <th>*Z</th>
@@ -56,34 +74,35 @@ export const StationBoard = () => {
             </tr>
           </thead>
           <tbody>
-            {departures.map((departure, index) => {
-              const [bgColor, textColor] = departure.color.split("~");
+            {connections.map((connection, index) => {
+              const [bgColor, textColor] = connection.color.split("~");
               const arrDelay =
-                departure.arr_delay !== "+0" ? departure.arr_delay : null;
+                connection.arr_delay !== "+0" ? connection.arr_delay : null;
               const depDelay =
-                departure.dep_delay !== "+0" ? departure.dep_delay : null;
+                connection.dep_delay !== "+0" ? connection.dep_delay : null;
 
               return (
-                <tr key={`${departure.time}-${index}`}>
+                <tr key={`${connection.time}-${index}`}>
                   <td>
-                    {new Date(departure.time).toLocaleTimeString("de-CH", {
+                    {new Date(connection.time).toLocaleTimeString("de-CH", {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
                     {arrDelay && ` (Arr: ${arrDelay})`}
                     {depDelay && ` (Dep: ${depDelay})`}
                   </td>
+                  <td>{connection.mode}</td>
                   <td
                     style={{
                       backgroundColor: `#${bgColor}`,
                       color: `#${textColor}`,
                     }}
                   >
-                    {departure.line}
+                    {connection.line}
                   </td>
-                  <td>{departure.terminal.name}</td>
-                  <td>{departure["*Z"]}</td>
-                  <td>{departure.track}</td>
+                  <td>{connection.terminal.name}</td>
+                  <td>{connection["*Z"]}</td>
+                  <td>{connection.track}</td>
                 </tr>
               );
             })}
