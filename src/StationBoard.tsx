@@ -97,7 +97,7 @@ export const StationBoard = () => {
                   connection.mode === "Passing"
                 ) {
                   const arrDelay =
-                    connection.arr_delay !== "+0"
+                    connection.arr_delay && connection.arr_delay !== "+0"
                       ? ` (${connection.arr_delay})`
                       : "";
                   return `${formatTime(
@@ -114,7 +114,7 @@ export const StationBoard = () => {
                   connection.mode === "Passing"
                 ) {
                   const depDelay =
-                    connection.dep_delay !== "+0"
+                    connection.dep_delay && connection.dep_delay !== "+0"
                       ? ` (${connection.dep_delay})`
                       : "";
                   return `${formatTime(
