@@ -122,7 +122,6 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
         {/* Draw trains */}
         {connections.map((conn, index) => {
           const color = conn.color?.split("~")[1] || "white";
-          console.debug(color);
 
           let x1: number, x2: number;
 
