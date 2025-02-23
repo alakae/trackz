@@ -244,7 +244,9 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                     }
                     height={20}
                     fill="transparent"
-                    stroke="red"
+                    stroke={
+                      conn.color ? `#${conn.color.split("~")[1]}` : "#fff"
+                    }
                     strokeWidth={2}
                     cornerRadius={5}
                   />
