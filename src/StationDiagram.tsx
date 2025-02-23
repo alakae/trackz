@@ -1,5 +1,5 @@
 import React from "react";
-import { Stage, Layer, Line, Rect, Text } from "react-konva";
+import { Layer, Line, Rect, Stage, Text } from "react-konva";
 import { DisplayConnection } from "./display/displayConnection";
 
 interface StationDiagramProps {
@@ -14,7 +14,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
   height = 500,
 }) => {
   const MARGIN = {
-    left: 50,
+    left: 100, // Increased left margin to accommodate track labels
     right: 20,
     top: 30,
     bottom: 30,
@@ -54,49 +54,46 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
   return (
     <Stage width={width} height={height}>
       <Layer>
-        {/* Draw time axis */}
-        <Line
-          points={[
-            MARGIN.left,
-            height - MARGIN.bottom,
-            width - MARGIN.right,
-            height - MARGIN.bottom,
-          ]}
-          stroke="black"
-          strokeWidth={1}
-        />
+        {/* Draw ticks aligned with clock hours */}
+        {(() => {
+          const ticks = [];
+          const startMinutes = now.getMinutes();
+          let currentTime = new Date(now);
 
-        {/* Draw ticks every 15 minutes */}
-        {Array.from({ length: 5 }).map((_, i) => {
-          const tickTime = new Date(now.getTime() + i * 15 * 60 * 1000);
-          const x = timeToX(tickTime.toISOString());
-          const isFullHour = tickTime.getMinutes() === 0;
+          // Round to the nearest previous 15 minutes
+          currentTime.setMinutes(Math.floor(startMinutes / 15) * 15, 0, 0);
 
-          return (
-            <React.Fragment key={i}>
-              {/* Tick */}
-              <Line
-                points={[
-                  x,
-                  height - MARGIN.bottom,
-                  x,
-                  height - MARGIN.bottom + 10,
-                ]}
-                stroke={isFullHour ? "black" : "#aaa"}
-                strokeWidth={1}
-              />
-              {/* Label for full hour */}
-              {isFullHour && (
-                <Text
-                  text={tickTime.getHours().toString().padStart(2, "0") + ":00"}
-                  x={x - 10}
-                  y={height - MARGIN.bottom + 12}
-                  fontSize={12}
+          // Generate ticks until we reach past the end time
+          while (currentTime <= endTime) {
+            const x = timeToX(currentTime.toISOString());
+            const minutes = currentTime.getMinutes();
+            const isFullHour = minutes === 0;
+
+            ticks.push(
+              <React.Fragment key={currentTime.getTime()}>
+                <Line
+                  points={[x, MARGIN.top, x, height - MARGIN.bottom + 10]}
+                  stroke={"#aaa"}
+                  strokeWidth={isFullHour ? 2 : 1}
                 />
-              )}
-            </React.Fragment>
-          );
-        })}
+                {isFullHour && (
+                  <Text
+                    text={
+                      currentTime.getHours().toString().padStart(2, "0") + ":00"
+                    }
+                    x={x - 10}
+                    y={height - MARGIN.bottom + 12}
+                    fontSize={12}
+                  />
+                )}
+              </React.Fragment>,
+            );
+
+            // Add 15 minutes for next tick
+            currentTime = new Date(currentTime.getTime() + 15 * 60 * 1000);
+          }
+          return ticks;
+        })()}
 
         {/* Draw track lines and labels */}
         {tracks.map((track, index) => (
@@ -134,26 +131,29 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
             x2 = Math.max(x1 + 50, timeToX(conn.departure_time));
           } else if (conn.mode === "Arrival") {
             x1 = timeToX(conn.arrival_time);
-            x2 = x1 + 50; // Fixed width for arrival-only trains
+            x2 = x1 + 50; // Fixed width for arrival
           } else {
+            // Departure
             x2 = timeToX(conn.departure_time);
-            x1 = x2 - 50; // Fixed width for departure-only trains
+            x1 = x2 - 50; // Fixed width for departure
           }
+
+          if (!conn.track) return null;
 
           return (
             <React.Fragment key={index}>
               <Rect
                 x={x1}
-                y={trackToY(conn.track) - 15}
+                y={trackToY(conn.track) - 20 / 2}
                 width={x2 - x1}
-                height={30}
+                height={20}
                 fill={conn.color ? `#${conn.color.split("~")[0]}` : "#666"}
                 cornerRadius={5}
               />
               <Text
                 text={conn.line}
                 x={x1 + 5}
-                y={trackToY(conn.track) - 10}
+                y={trackToY(conn.track) - 8}
                 fill={conn.color ? `#${conn.color.split("~")[1]}` : "#666"}
                 fontSize={14}
               />
