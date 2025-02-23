@@ -61,7 +61,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
           let currentTime = new Date(now);
 
           // Round to the nearest previous 15 minutes
-          currentTime.setMinutes(Math.floor(startMinutes / 15) * 15, 0, 0);
+          currentTime.setMinutes(Math.ceil(startMinutes / 15) * 15, 0, 0);
 
           // Generate ticks until we reach past the end time
           while (currentTime <= endTime) {
@@ -126,16 +126,17 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
 
           let x1: number, x2: number;
 
+          const minimum = 35;
           if (conn.mode === "Passing" || conn.mode === "Terminal") {
             x1 = timeToX(conn.arrival_time);
-            x2 = Math.max(x1 + 50, timeToX(conn.departure_time));
+            x2 = Math.max(x1 + minimum, timeToX(conn.departure_time));
           } else if (conn.mode === "Arrival") {
             x1 = timeToX(conn.arrival_time);
-            x2 = x1 + 50; // Fixed width for arrival
+            x2 = x1 + minimum; // Fixed width for arrival
           } else {
             // Departure
             x2 = timeToX(conn.departure_time);
-            x1 = x2 - 50; // Fixed width for departure
+            x1 = x2 - minimum; // Fixed width for departure
           }
 
           if (!conn.track) return null;
