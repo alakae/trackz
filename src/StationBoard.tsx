@@ -5,6 +5,7 @@ import "./StationBoard.css";
 import { processConnections } from "./processConnections.ts";
 import { DisplayConnection } from "./display/displayConnection.ts";
 import { StationTable } from "./StationTable.tsx";
+import { StationDiagram } from "./StationDiagram.tsx";
 
 export const StationBoard = () => {
   const { label } = useParams<{ label: string }>();
@@ -61,6 +62,7 @@ export const StationBoard = () => {
   return (
     <div className="page-container">
       <h1>Station Board - {stationName}</h1>
+      <StationDiagram connections={connections} />
       <StationTable connections={connections} />
     </div>
   );
