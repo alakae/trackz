@@ -128,9 +128,9 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
         {/* Draw trains */}
         {connections.map((conn, index) => {
           let scheduledX1: number, scheduledX2: number;
-          let effectiveX1: number, effectiveX2: number;
+          let effectiveX1: number | undefined, effectiveX2: number | undefined;
 
-          const minimum = 35;
+          const minimum = 5;
           if (conn.mode === "Passing" || conn.mode === "Terminal") {
             // Scheduled times
             scheduledX1 = timeToX(conn.arrival_time);
@@ -140,23 +140,29 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
             );
 
             // Effective times
-            effectiveX1 = timeToX(
-              getEffectiveArrivalTime(conn) || conn.arrival_time,
-            );
-            effectiveX2 = Math.max(
-              effectiveX1 + minimum,
-              timeToX(getEffectiveDepartureTime(conn) || conn.departure_time),
-            );
+            const effectiveArrival = getEffectiveArrivalTime(conn);
+            const effectiveDeparture = getEffectiveDepartureTime(conn);
+            effectiveX1 = effectiveArrival
+              ? timeToX(effectiveArrival)
+              : undefined;
+            effectiveX2 = effectiveDeparture
+              ? Math.max(
+                  (effectiveX1 || 0) + minimum,
+                  timeToX(effectiveDeparture),
+                )
+              : undefined;
           } else if (conn.mode === "Arrival") {
             // Scheduled times
             scheduledX1 = timeToX(conn.arrival_time);
             scheduledX2 = scheduledX1 + minimum;
 
             // Effective times
-            effectiveX1 = timeToX(
-              getEffectiveArrivalTime(conn) || conn.arrival_time,
-            );
-            effectiveX2 = effectiveX1 + minimum;
+            const effectiveArrival = getEffectiveArrivalTime(conn);
+            effectiveX1 = effectiveArrival
+              ? timeToX(effectiveArrival)
+              : undefined;
+            effectiveX2 =
+              effectiveX1 !== undefined ? effectiveX1 + minimum : undefined;
           } else {
             // Departure
             // Scheduled times
@@ -167,11 +173,19 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
             }
 
             // Effective times
-            effectiveX2 = timeToX(
-              getEffectiveDepartureTime(conn) || conn.departure_time,
-            );
-            effectiveX1 = Math.max(effectiveX2 - minimum, MARGIN.left);
-            if (effectiveX2 - effectiveX1 < minimum) {
+            const effectiveDeparture = getEffectiveDepartureTime(conn);
+            effectiveX2 = effectiveDeparture
+              ? timeToX(effectiveDeparture)
+              : undefined;
+            effectiveX1 =
+              effectiveX2 !== undefined
+                ? Math.max(effectiveX2 - minimum, MARGIN.left)
+                : undefined;
+            if (
+              effectiveX1 !== undefined &&
+              effectiveX2 !== undefined &&
+              effectiveX2 - effectiveX1 < minimum
+            ) {
               effectiveX2 = effectiveX1 + minimum;
             }
           }
@@ -188,19 +202,23 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                 fill={conn.color ? `#${conn.color.split("~")[0]}` : "#666"}
                 cornerRadius={5}
               />
-              <Rect
-                x={effectiveX1}
-                y={trackToY(conn.track) - 20 / 2}
-                width={effectiveX2 - effectiveX1}
-                height={20}
-                fill="transparent"
-                stroke="red"
-                strokeWidth={2}
-                cornerRadius={5}
-              />
+              {(effectiveX1 !== undefined || effectiveX2 !== undefined) && (
+                <Rect
+                  x={effectiveX1 ?? scheduledX1}
+                  y={trackToY(conn.track) - 20 / 2}
+                  width={
+                    (effectiveX2 ?? scheduledX2) - (effectiveX1 ?? scheduledX1)
+                  }
+                  height={20}
+                  fill="transparent"
+                  stroke="red"
+                  strokeWidth={2}
+                  cornerRadius={5}
+                />
+              )}
               <Text
                 text={conn.line}
-                x={effectiveX1 + 5}
+                x={scheduledX1 + 5}
                 y={trackToY(conn.track) - 8}
                 fill={conn.color ? `#${conn.color.split("~")[1]}` : "#666"}
                 fontSize={14}
