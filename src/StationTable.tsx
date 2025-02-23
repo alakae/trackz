@@ -42,10 +42,9 @@ export const StationTable = ({ connections }: StationTableProps) => {
                 connection.mode === "Passing" ||
                 connection.mode === "Terminal"
               ) {
-                const arrDelay =
-                  connection.arr_delay && connection.arr_delay !== "+0"
-                    ? ` (${connection.arr_delay})`
-                    : "";
+                const arrDelay = connection.arr_delay
+                  ? ` (+${connection.arr_delay})`
+                  : "";
                 return `${formatTime(
                   (connection as ArrivalConnection | PassingConnection)
                     .arrival_time,
@@ -60,10 +59,9 @@ export const StationTable = ({ connections }: StationTableProps) => {
                 connection.mode === "Passing" ||
                 connection.mode === "Terminal"
               ) {
-                const depDelay =
-                  connection.dep_delay && connection.dep_delay !== "+0"
-                    ? ` (${connection.dep_delay})`
-                    : "";
+                const depDelay = connection.dep_delay
+                  ? ` (+${connection.dep_delay})`
+                  : "";
                 return `${formatTime(
                   (connection as DepartureConnection | PassingConnection)
                     .departure_time,

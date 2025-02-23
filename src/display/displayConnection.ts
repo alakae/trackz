@@ -21,29 +21,29 @@ interface BaseConnection {
 export interface ArrivalConnection extends BaseConnection {
   mode: "Arrival";
   arrival_time: Date;
-  arr_delay: string;
+  arr_delay: number | undefined;
 }
 
 export interface DepartureConnection extends BaseConnection {
   mode: "Departure";
   departure_time: Date;
-  dep_delay: string;
+  dep_delay: number | undefined;
 }
 
 export interface PassingConnection extends BaseConnection {
   mode: "Passing";
   arrival_time: Date;
   departure_time: Date;
-  arr_delay: string;
-  dep_delay: string;
+  arr_delay: number | undefined;
+  dep_delay: number | undefined;
 }
 
 export interface TerminalConnection extends BaseConnection {
   mode: "Terminal";
   arrival_time: Date;
   departure_time: Date;
-  arr_delay: string;
-  dep_delay: string;
+  arr_delay: number | undefined;
+  dep_delay: number | undefined;
 }
 
 // Combined type for all connection types
