@@ -85,7 +85,13 @@ export const StationTable = ({ connections }: StationTableProps) => {
                 <td>{getArrivalTime()}</td>
                 <td>{getDepartureTime()}</td>
                 <td>{connection.terminal.name}</td>
-                <td>{connection.track}</td>
+                <td
+                  style={{
+                    color: connection.changed_track ? "red" : "inherit",
+                  }}
+                >
+                  {connection.track}
+                </td>
               </tr>
             );
           })}

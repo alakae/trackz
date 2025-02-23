@@ -13,7 +13,8 @@ interface BaseConnection {
   "*G": string;
   "*L": string;
   "*Z": string;
-  track: string;
+  track: number | undefined;
+  changed_track: boolean;
   mode: Mode;
 }
 

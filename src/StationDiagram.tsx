@@ -33,7 +33,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
         .map((conn) => conn.track)
         .filter((track) => track !== undefined),
     ),
-  ].sort((a, b) => parseFloat(a) - parseFloat(b));
+  ].sort((a, b) => a - b);
   const trackHeight = contentHeight / tracks.length;
 
   // Calculate time range (1 hour window)
@@ -50,7 +50,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
   };
 
   // Helper function to convert track to y position
-  const trackToY = (track: string) => {
+  const trackToY = (track: number) => {
     const index = tracks.indexOf(track);
     return MARGIN.top + index * trackHeight + trackHeight / 2;
   };

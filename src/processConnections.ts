@@ -94,14 +94,34 @@ export const processConnections = (
   // Create combined list with source type
   const allConnections: DisplayConnection[] = [
     ...departureData.connections.map((conn) => ({
-      ...conn,
+      type: conn.type,
+      operator: conn.operator,
+      line: conn.line,
+      color: conn.color,
+      type_name: conn.type_name,
+      terminal: conn.terminal,
+      "*G": conn["*G"],
+      "*L": conn["*L"],
+      "*Z": conn["*Z"],
+      track: parseInt(conn.track, 10) || undefined,
+      changed_track: conn.track?.includes("!"),
       mode: "Departure" as const,
       departure_time: new Date(conn.time), // Map time to departure_time
       dep_delay:
         parseInt(conn.dep_delay?.replace("+", "") || "0", 10) || undefined,
     })),
     ...arrivalData.connections.map((conn) => ({
-      ...conn,
+      type: conn.type,
+      operator: conn.operator,
+      line: conn.line,
+      color: conn.color,
+      type_name: conn.type_name,
+      terminal: conn.terminal,
+      "*G": conn["*G"],
+      "*L": conn["*L"],
+      "*Z": conn["*Z"],
+      track: parseInt(conn.track, 10) || undefined,
+      changed_track: conn.track?.includes("!"),
       mode: "Arrival" as const,
       arrival_time: new Date(conn.time), // Map time to arrival_time
       arr_delay:
