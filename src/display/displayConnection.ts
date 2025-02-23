@@ -52,3 +52,25 @@ export type DisplayConnection =
   | DepartureConnection
   | PassingConnection
   | TerminalConnection;
+
+export function getEffectiveArrivalTime(
+  connection: ArrivalConnection | PassingConnection | TerminalConnection,
+): Date | undefined {
+  if (connection.arr_delay === undefined) {
+    return undefined;
+  }
+  const effectiveTime = new Date(connection.arrival_time);
+  effectiveTime.setMinutes(effectiveTime.getMinutes() + connection.arr_delay);
+  return effectiveTime;
+}
+
+export function getEffectiveDepartureTime(
+  connection: DepartureConnection | PassingConnection | TerminalConnection,
+): Date | undefined {
+  if (connection.dep_delay === undefined) {
+    return undefined;
+  }
+  const effectiveTime = new Date(connection.departure_time);
+  effectiveTime.setMinutes(effectiveTime.getMinutes() + connection.dep_delay);
+  return effectiveTime;
+}

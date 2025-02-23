@@ -1,6 +1,10 @@
 import React from "react";
 import { Layer, Line, Rect, Stage, Text } from "react-konva";
-import { DisplayConnection } from "./display/displayConnection";
+import {
+  DisplayConnection,
+  getEffectiveArrivalTime,
+  getEffectiveDepartureTime,
+} from "./display/displayConnection";
 
 interface StationDiagramProps {
   connections: DisplayConnection[];
@@ -123,21 +127,52 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
 
         {/* Draw trains */}
         {connections.map((conn, index) => {
-          let x1: number, x2: number;
+          let scheduledX1: number, scheduledX2: number;
+          let effectiveX1: number, effectiveX2: number;
 
           const minimum = 35;
           if (conn.mode === "Passing" || conn.mode === "Terminal") {
-            x1 = timeToX(conn.arrival_time);
-            x2 = Math.max(x1 + minimum, timeToX(conn.departure_time));
+            // Scheduled times
+            scheduledX1 = timeToX(conn.arrival_time);
+            scheduledX2 = Math.max(
+              scheduledX1 + minimum,
+              timeToX(conn.departure_time),
+            );
+
+            // Effective times
+            effectiveX1 = timeToX(
+              getEffectiveArrivalTime(conn) || conn.arrival_time,
+            );
+            effectiveX2 = Math.max(
+              effectiveX1 + minimum,
+              timeToX(getEffectiveDepartureTime(conn) || conn.departure_time),
+            );
           } else if (conn.mode === "Arrival") {
-            x1 = timeToX(conn.arrival_time);
-            x2 = x1 + minimum; // Fixed width for arrival
+            // Scheduled times
+            scheduledX1 = timeToX(conn.arrival_time);
+            scheduledX2 = scheduledX1 + minimum;
+
+            // Effective times
+            effectiveX1 = timeToX(
+              getEffectiveArrivalTime(conn) || conn.arrival_time,
+            );
+            effectiveX2 = effectiveX1 + minimum;
           } else {
             // Departure
-            x2 = timeToX(conn.departure_time);
-            x1 = Math.max(x2 - minimum, MARGIN.left); // Ensure x1 respects minimum and does not go below left margin
-            if (x2 - x1 < minimum) {
-              x2 = x1 + minimum; // Adjust x2 if needed to maintain the minimum width
+            // Scheduled times
+            scheduledX2 = timeToX(conn.departure_time);
+            scheduledX1 = Math.max(scheduledX2 - minimum, MARGIN.left);
+            if (scheduledX2 - scheduledX1 < minimum) {
+              scheduledX2 = scheduledX1 + minimum;
+            }
+
+            // Effective times
+            effectiveX2 = timeToX(
+              getEffectiveDepartureTime(conn) || conn.departure_time,
+            );
+            effectiveX1 = Math.max(effectiveX2 - minimum, MARGIN.left);
+            if (effectiveX2 - effectiveX1 < minimum) {
+              effectiveX2 = effectiveX1 + minimum;
             }
           }
 
@@ -146,16 +181,26 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
           return (
             <React.Fragment key={index}>
               <Rect
-                x={x1}
+                x={scheduledX1}
                 y={trackToY(conn.track) - 20 / 2}
-                width={x2 - x1}
+                width={scheduledX2 - scheduledX1}
                 height={20}
                 fill={conn.color ? `#${conn.color.split("~")[0]}` : "#666"}
                 cornerRadius={5}
               />
+              <Rect
+                x={effectiveX1}
+                y={trackToY(conn.track) - 20 / 2}
+                width={effectiveX2 - effectiveX1}
+                height={20}
+                fill="transparent"
+                stroke="red"
+                strokeWidth={2}
+                cornerRadius={5}
+              />
               <Text
                 text={conn.line}
-                x={x1 + 5}
+                x={effectiveX1 + 5}
                 y={trackToY(conn.track) - 8}
                 fill={conn.color ? `#${conn.color.split("~")[1]}` : "#666"}
                 fontSize={14}
