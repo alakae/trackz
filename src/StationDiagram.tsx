@@ -37,8 +37,8 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
   const endTime = new Date(now.getTime() + 60 * 60 * 1000);
 
   // Helper function to convert time to x position
-  const timeToX = (time: string) => {
-    const t = new Date(time).getTime();
+  const timeToX = (time: Date) => {
+    const t = time.getTime();
     return (
       MARGIN.left +
       ((t - now.getTime()) / (endTime.getTime() - now.getTime())) * contentWidth
@@ -65,7 +65,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
 
           // Generate lines until we reach past the end time
           while (currentTime <= endTime) {
-            const x = timeToX(currentTime.toISOString());
+            const x = timeToX(currentTime);
             const minutes = currentTime.getMinutes();
             const isFullHour = minutes === 0;
             const isQuarterHour = minutes % 15 === 0 && !isFullHour;
@@ -98,7 +98,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
         })()}
 
         {/* Draw track lines and labels */}
-        {tracks.map((track, index) => (
+        {tracks.map((track) => (
           <React.Fragment key={track}>
             <Line
               points={[

@@ -28,9 +28,9 @@ export const StationTable = ({ connections }: StationTableProps) => {
           {connections.map((connection, index) => {
             const [bgColor, textColor] = connection.color.split("~");
 
-            const formatTime = (timestamp: string | undefined) => {
+            const formatTime = (timestamp: Date | undefined) => {
               if (!timestamp) return "";
-              return new Date(timestamp).toLocaleTimeString("de-CH", {
+              return timestamp.toLocaleTimeString("de-CH", {
                 hour: "2-digit",
                 minute: "2-digit",
               });

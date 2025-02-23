@@ -20,28 +20,28 @@ interface BaseConnection {
 // Specific interfaces for each mode
 export interface ArrivalConnection extends BaseConnection {
   mode: "Arrival";
-  arrival_time: string;
+  arrival_time: Date;
   arr_delay: string;
 }
 
 export interface DepartureConnection extends BaseConnection {
   mode: "Departure";
-  departure_time: string;
+  departure_time: Date;
   dep_delay: string;
 }
 
 export interface PassingConnection extends BaseConnection {
   mode: "Passing";
-  arrival_time: string;
-  departure_time: string;
+  arrival_time: Date;
+  departure_time: Date;
   arr_delay: string;
   dep_delay: string;
 }
 
 export interface TerminalConnection extends BaseConnection {
   mode: "Terminal";
-  arrival_time: string;
-  departure_time: string;
+  arrival_time: Date;
+  departure_time: Date;
   arr_delay: string;
   dep_delay: string;
 }

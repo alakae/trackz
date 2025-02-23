@@ -96,13 +96,13 @@ export const processConnections = (
     ...departureData.connections.map((conn) => ({
       ...conn,
       mode: "Departure" as const,
-      departure_time: conn.time, // Map time to departure_time
+      departure_time: new Date(conn.time), // Map time to departure_time
       dep_delay: conn.dep_delay,
     })),
     ...arrivalData.connections.map((conn) => ({
       ...conn,
       mode: "Arrival" as const,
-      arrival_time: conn.time, // Map time to arrival_time
+      arrival_time: new Date(conn.time), // Map time to arrival_time
       arr_delay: conn.arr_delay,
     })),
   ].filter((conn) => {
