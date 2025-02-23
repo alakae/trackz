@@ -54,27 +54,29 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
   return (
     <Stage width={width} height={height}>
       <Layer>
-        {/* Draw ticks aligned with clock hours */}
+        {/* Draw lines aligned with clock hours */}
         {(() => {
-          const ticks = [];
+          const lines = [];
           const startMinutes = now.getMinutes();
           let currentTime = new Date(now);
 
-          // Round to the nearest previous 15 minutes
-          currentTime.setMinutes(Math.ceil(startMinutes / 15) * 15, 0, 0);
+          // Round to the nearest previous 5 minutes
+          currentTime.setMinutes(Math.ceil(startMinutes / 5) * 5, 0, 0);
 
-          // Generate ticks until we reach past the end time
+          // Generate lines until we reach past the end time
           while (currentTime <= endTime) {
             const x = timeToX(currentTime.toISOString());
             const minutes = currentTime.getMinutes();
             const isFullHour = minutes === 0;
+            const isQuarterHour = minutes % 15 === 0 && !isFullHour;
 
-            ticks.push(
+            lines.push(
               <React.Fragment key={currentTime.getTime()}>
                 <Line
                   points={[x, MARGIN.top, x, height - MARGIN.bottom + 10]}
                   stroke={"#aaa"}
-                  strokeWidth={isFullHour ? 2 : 1}
+                  strokeWidth={isFullHour ? 2 : isQuarterHour ? 1 : 1}
+                  dash={isFullHour || isQuarterHour ? [] : [4, 4]} // Dashed line for every 5 minutes
                 />
                 {isFullHour && (
                   <Text
@@ -89,10 +91,10 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
               </React.Fragment>,
             );
 
-            // Add 15 minutes for next tick
-            currentTime = new Date(currentTime.getTime() + 15 * 60 * 1000);
+            // Add 5 minutes for next tick
+            currentTime = new Date(currentTime.getTime() + 5 * 60 * 1000);
           }
-          return ticks;
+          return lines;
         })()}
 
         {/* Draw track lines and labels */}
