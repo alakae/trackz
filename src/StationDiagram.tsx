@@ -135,7 +135,10 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
           } else {
             // Departure
             x2 = timeToX(conn.departure_time);
-            x1 = x2 - minimum; // Fixed width for departure
+            x1 = Math.max(x2 - minimum, MARGIN.left); // Ensure x1 respects minimum and does not go below left margin
+            if (x2 - x1 < minimum) {
+              x2 = x1 + minimum; // Adjust x2 if needed to maintain the minimum width
+            }
           }
 
           if (!conn.track) return null;
