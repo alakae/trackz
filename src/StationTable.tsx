@@ -81,7 +81,7 @@ export const StationTable = ({ connections }: StationTableProps) => {
                 >
                   {connection.line}
                 </td>
-                <td>{connection["*Z"]}</td>
+                <td>{connection["*Z"]?.replace(/^0+/, "") || ""}</td>
                 <td>{getArrivalTime()}</td>
                 <td>{getDepartureTime()}</td>
                 <td>{connection.terminal.name}</td>
