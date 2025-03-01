@@ -223,7 +223,8 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                   fill={conn.color ? `#${conn.color.split("~")[0]}` : "#666"}
                   cornerRadius={5}
                 />
-                {(effectiveX1 !== undefined || effectiveX2 !== undefined) && (
+                {(effectiveX1 !== scheduledX1 ||
+                  effectiveX2 !== scheduledX2) && (
                   <Rect
                     x={Math.max(effectiveX1 ?? scheduledX1, MARGIN.left)}
                     y={trackToY(conn.track) - 20 / 2}
