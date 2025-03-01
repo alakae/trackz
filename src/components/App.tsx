@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 import "../css/App.css";
-import { Home } from "../Home.tsx";
+import { Home } from "./Home.tsx";
 import { Stations } from "./Stations.tsx";
 import { About } from "./About.tsx";
 import { StationBoard } from "./StationBoard.tsx";
