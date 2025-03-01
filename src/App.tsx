@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
-import "./App.css";
+import "./css/App.css";
 import { Home } from "./Home.tsx";
 import { Stations } from "./Stations.tsx";
 import { About } from "./About.tsx";

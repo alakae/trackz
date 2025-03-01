@@ -1,6 +1,6 @@
 import { useState, useEffect, ChangeEvent } from "react";
 import { Link } from "react-router-dom";
-import "./Stations.css";
+import "./css/Stations.css";
 import { Station } from "./api/station.ts";
 import DOMPurify from "dompurify";
 
