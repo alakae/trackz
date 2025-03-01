@@ -1,0 +1,268 @@
+import React, { useEffect, useRef, useState } from "react";
+import { Layer, Line, Rect, Stage, Text } from "react-konva";
+import {
+  DisplayConnection,
+  getEffectiveArrivalTime,
+  getEffectiveDepartureTime,
+} from "../display/displayConnection.ts";
+
+interface StationDiagramProps {
+  connections: DisplayConnection[];
+}
+
+export const StationDiagram: React.FC<StationDiagramProps> = ({
+  connections,
+}) => {
+  const MARGIN = {
+    left: 40,
+    right: 20,
+    top: 30,
+    bottom: 30,
+  };
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 800, height: 500 });
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        console.debug(width, height);
+        setDimensions({ width, height });
+      }
+    });
+
+    resizeObserver.observe(containerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  // Get unique tracks and sort them
+  const tracks = [
+    ...new Set(
+      connections
+        .map((conn) => conn.track)
+        .filter((track) => track !== undefined),
+    ),
+  ].sort((a, b) => a - b);
+  const trackHeight =
+    (dimensions.height - MARGIN.top - MARGIN.bottom) / tracks.length;
+
+  // Calculate time range (1 hour window)
+  const now = new Date();
+  const endTime = new Date(now.getTime() + 60 * 60 * 1000);
+
+  // Helper function to convert time to x position
+  const timeToX = (time: Date) => {
+    const t = time.getTime();
+    return (
+      MARGIN.left +
+      ((t - now.getTime()) / (endTime.getTime() - now.getTime())) *
+        dimensions.width
+    );
+  };
+
+  // Helper function to convert track to y position
+  const trackToY = (track: number) => {
+    const index = tracks.indexOf(track);
+    return MARGIN.top + index * trackHeight + trackHeight / 2;
+  };
+
+  console.debug(dimensions);
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        width: "100%",
+        height: "55vh",
+        overflow: "hidden",
+      }}
+    >
+      <Stage width={dimensions.width} height={dimensions.height}>
+        <Layer>
+          {/* Draw lines aligned with clock hours */}
+          {(() => {
+            const lines = [];
+            const startMinutes = now.getMinutes();
+            let currentTime = new Date(now);
+
+            // Round to the nearest previous 5 minutes
+            currentTime.setMinutes(Math.ceil(startMinutes / 5) * 5, 0, 0);
+
+            // Generate lines until we reach past the end time
+            while (currentTime <= endTime) {
+              const x = timeToX(currentTime);
+              const minutes = currentTime.getMinutes();
+              const isFullHour = minutes === 0;
+              const isQuarterHour = minutes % 15 === 0 && !isFullHour;
+
+              lines.push(
+                <React.Fragment key={currentTime.getTime()}>
+                  <Line
+                    points={[
+                      x,
+                      MARGIN.top,
+                      x,
+                      dimensions.height - MARGIN.bottom + 10,
+                    ]}
+                    stroke={"#aaa"}
+                    strokeWidth={isFullHour ? 2 : isQuarterHour ? 1 : 1}
+                    dash={isFullHour || isQuarterHour ? [] : [4, 4]} // Dashed line for every 5 minutes
+                  />
+                  {isFullHour && (
+                    <Text
+                      text={
+                        currentTime.getHours().toString().padStart(2, "0") +
+                        ":00"
+                      }
+                      x={x - 10}
+                      y={dimensions.height - MARGIN.bottom + 12}
+                      fontSize={12}
+                    />
+                  )}
+                </React.Fragment>,
+              );
+
+              // Add 5 minutes for next tick
+              currentTime = new Date(currentTime.getTime() + 5 * 60 * 1000);
+            }
+            return lines;
+          })()}
+
+          {/* Draw track lines and labels */}
+          {tracks.map((track) => (
+            <React.Fragment key={track}>
+              <Line
+                points={[
+                  MARGIN.left,
+                  trackToY(track),
+                  dimensions.width - MARGIN.right,
+                  trackToY(track),
+                ]}
+                stroke="#ddd"
+                strokeWidth={1}
+              />
+              <Text
+                text={`${track}`}
+                x={5}
+                y={trackToY(track) - 10}
+                align="right"
+                width={MARGIN.left - 10}
+                fill="white"
+              />
+            </React.Fragment>
+          ))}
+
+          {/* Draw trains */}
+          {connections.map((conn, index) => {
+            let scheduledX1: number, scheduledX2: number;
+            let effectiveX1: number | undefined,
+              effectiveX2: number | undefined;
+
+            const minimum = 20;
+            if (conn.mode === "Passing" || conn.mode === "Terminal") {
+              // Scheduled times
+              scheduledX1 = timeToX(conn.arrival_time);
+              scheduledX2 = Math.max(
+                scheduledX1 + minimum,
+                timeToX(conn.departure_time),
+              );
+
+              // Effective times
+              const effectiveArrival = getEffectiveArrivalTime(conn);
+              const effectiveDeparture = getEffectiveDepartureTime(conn);
+              effectiveX1 = effectiveArrival
+                ? timeToX(effectiveArrival)
+                : undefined;
+              effectiveX2 = effectiveDeparture
+                ? Math.max(
+                    (effectiveX1 || 0) + minimum,
+                    timeToX(effectiveDeparture),
+                  )
+                : undefined;
+            } else if (conn.mode === "Arrival") {
+              // Scheduled times
+              scheduledX1 = timeToX(conn.arrival_time);
+              scheduledX2 = scheduledX1 + minimum;
+
+              // Effective times
+              const effectiveArrival = getEffectiveArrivalTime(conn);
+              effectiveX1 = effectiveArrival
+                ? timeToX(effectiveArrival)
+                : undefined;
+              effectiveX2 =
+                effectiveX1 !== undefined ? effectiveX1 + minimum : undefined;
+            } else {
+              // Departure
+              // Scheduled times
+              scheduledX2 = timeToX(conn.departure_time);
+              scheduledX1 = Math.max(scheduledX2 - minimum, MARGIN.left);
+              if (scheduledX2 - scheduledX1 < minimum) {
+                scheduledX2 = scheduledX1 + minimum;
+              }
+
+              // Effective times
+              const effectiveDeparture = getEffectiveDepartureTime(conn);
+              effectiveX2 = effectiveDeparture
+                ? timeToX(effectiveDeparture)
+                : undefined;
+              effectiveX1 =
+                effectiveX2 !== undefined
+                  ? Math.max(effectiveX2 - minimum, MARGIN.left)
+                  : undefined;
+              if (
+                effectiveX1 !== undefined &&
+                effectiveX2 !== undefined &&
+                effectiveX2 - effectiveX1 < minimum
+              ) {
+                effectiveX2 = effectiveX1 + minimum;
+              }
+            }
+
+            if (!conn.track) return null;
+
+            return (
+              <React.Fragment key={index}>
+                <Rect
+                  x={scheduledX1}
+                  y={trackToY(conn.track) - 20 / 2}
+                  width={scheduledX2 - scheduledX1}
+                  height={20}
+                  fill={conn.color ? `#${conn.color.split("~")[0]}` : "#666"}
+                  cornerRadius={5}
+                />
+                {(effectiveX1 !== undefined || effectiveX2 !== undefined) && (
+                  <Rect
+                    x={effectiveX1 ?? scheduledX1}
+                    y={trackToY(conn.track) - 20 / 2}
+                    width={
+                      (effectiveX2 ?? scheduledX2) -
+                      (effectiveX1 ?? scheduledX1)
+                    }
+                    height={20}
+                    fill="transparent"
+                    stroke={
+                      conn.color ? `#${conn.color.split("~")[1]}` : "#fff"
+                    }
+                    strokeWidth={2}
+                    cornerRadius={5}
+                  />
+                )}
+                <Text
+                  text={conn.line}
+                  x={scheduledX1 + 5}
+                  y={trackToY(conn.track) - 8}
+                  fill={conn.color ? `#${conn.color.split("~")[1]}` : "#666"}
+                  fontSize={14}
+                />
+              </React.Fragment>
+            );
+          })}
+        </Layer>
+      </Stage>
+    </div>
+  );
+};
