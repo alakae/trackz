@@ -18,7 +18,6 @@ export const StationTable = ({ connections }: StationTableProps) => {
           <tr>
             <th>Mode</th>
             <th>Line</th>
-            <th>*Z</th>
             <th>Time</th>
             <th>Terminal</th>
             <th>Track</th>
@@ -68,9 +67,8 @@ export const StationTable = ({ connections }: StationTableProps) => {
                     color: `#${textColor}`,
                   }}
                 >
-                  {connection.line}
+                  {connection.line} {connection["*Z"]?.replace(/^0+/, "") || ""}
                 </td>
-                <td>{connection["*Z"]?.replace(/^0+/, "") || ""}</td>
                 <td>{getTime()}</td>
                 <td>{connection.terminal.name}</td>
                 <td
