@@ -7,7 +7,6 @@
 
 This is a just for fun project.
 
-
 ## Using
 
 The latest image is automatically deployed at [trackz.ch](http://trackz.ch).
@@ -15,10 +14,13 @@ The latest image is automatically deployed at [trackz.ch](http://trackz.ch).
 ## Developing
 
 To execute the app in the development mode either run
+
 ```
 devbox run dev
 ```
+
 or
+
 ```
 npm run dev
 ```
