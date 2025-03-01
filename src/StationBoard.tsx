@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { StationBoardResponse } from "./api/stationBoardResponse.ts";
-import "./StationBoard.css";
+import "./StationTable.css";
 import { processConnections } from "./processConnections.ts";
 import { DisplayConnection } from "./display/displayConnection.ts";
 import { StationTable } from "./StationTable.tsx";
