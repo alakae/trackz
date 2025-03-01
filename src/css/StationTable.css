@@ -26,3 +26,15 @@
   background-color: #f8f8f8;
   color: #333;
 }
+
+@media (max-width: 480px) {
+  .station-table th,
+  .station-table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .station-table {
+    margin-top: 10px;
+  }
+}
