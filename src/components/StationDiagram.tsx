@@ -57,6 +57,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
       ref={ref}
       style={{
         width: "100vw",
+        maxWidth: "1200px",
         height: "50vh",
         minHeight: "500px",
       }}
