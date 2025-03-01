@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+
+    # Separate major updates into individual PRs
+    separate-major-updates: true
+    groups:
+      # Group React-related minor and patch updates together
+      react-ecosystem:
+        applies-to: version-updates
+        patterns:
+          - "react*"
+          - "@types/react*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # Group TypeScript and ESLint related minor and patch updates
+      dev-tools:
+        applies-to: version-updates
+        patterns:
+          - "typescript*"
+          - "typescript-eslint"
+          - "eslint*"
+          - "@eslint/*"
+          - "vite*"
+          - "globals"
+        update-types:
+          - "minor"
+          - "patch"
