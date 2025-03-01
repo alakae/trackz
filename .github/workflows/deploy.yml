@@ -28,7 +28,7 @@ jobs:
         run: devbox run -- npm ci
 
       - name: Build
-        run: devbox run -- npm run build --base=/trackz/
+        run: devbox run -- "npm run build --base=/trackz/"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
