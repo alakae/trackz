@@ -6,6 +6,7 @@ import {
   getEffectiveArrivalTime,
   getEffectiveDepartureTime,
 } from "../display/displayConnection.ts";
+import { useTriggerAutoRefresh } from "../utils/useTriggerAutoRefresh.tsx";
 
 interface StationDiagramProps {
   connections: DisplayConnection[];
@@ -14,6 +15,8 @@ interface StationDiagramProps {
 export const StationDiagram: React.FC<StationDiagramProps> = ({
   connections,
 }) => {
+  useTriggerAutoRefresh();
+
   const MARGIN = {
     left: 40,
     right: 0,
