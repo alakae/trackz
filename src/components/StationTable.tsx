@@ -4,7 +4,7 @@ import {
   DisplayConnection,
   PassingConnection,
 } from "../display/displayConnection.ts";
-import { formatTime } from "../formatTime.ts";
+import { formatTime } from "../utils/formatTime.ts";
 
 interface StationTableProps {
   connections: DisplayConnection[];
