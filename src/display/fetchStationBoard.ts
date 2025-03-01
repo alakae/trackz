@@ -11,7 +11,11 @@ export async function fetchStationBoard(
   label: string,
 ): Promise<StationBoardResult> {
   const baseURL = "https://search.ch/timetable/api/stationboard.json";
-  const queryParams = `stop=${encodeURIComponent(label)}&show_tracks=1&show_delays=1&transportation_types=train`;
+  const now = new Date();
+  now.setHours(now.getHours() - 2);
+  const dateParam = now.toISOString().split("T")[0];
+  const timeParam = now.toTimeString().split(" ")[0].substring(0, 5);
+  const queryParams = `stop=${encodeURIComponent(label)}&show_tracks=1&show_delays=1&transportation_types=train&date=${dateParam}&time=${timeParam}`;
 
   const departureURL = `${baseURL}?${queryParams}&mode=departure`;
   const arrivalURL = `${baseURL}?${queryParams}&mode=arrival`;

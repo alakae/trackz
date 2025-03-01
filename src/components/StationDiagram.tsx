@@ -16,7 +16,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
 }) => {
   const MARGIN = {
     left: 40,
-    right: 20,
+    right: 0,
     top: 30,
     bottom: 30,
   };
@@ -155,6 +155,10 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
               // Effective times
               const effectiveArrival = getEffectiveArrivalTime(conn);
               const effectiveDeparture = getEffectiveDepartureTime(conn);
+              if (effectiveDeparture < now) {
+                return null;
+              }
+
               effectiveX1 = effectiveArrival
                 ? timeToX(effectiveArrival)
                 : undefined;
@@ -208,7 +212,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
             return (
               <React.Fragment key={index}>
                 <Rect
-                  x={scheduledX1}
+                  x={Math.max(scheduledX1, MARGIN.left)}
                   y={trackToY(conn.track) - 20 / 2}
                   width={scheduledX2 - scheduledX1}
                   height={20}
@@ -217,7 +221,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                 />
                 {(effectiveX1 !== undefined || effectiveX2 !== undefined) && (
                   <Rect
-                    x={effectiveX1 ?? scheduledX1}
+                    x={Math.max(effectiveX1 ?? scheduledX1, MARGIN.left)}
                     y={trackToY(conn.track) - 20 / 2}
                     width={
                       (effectiveX2 ?? scheduledX2) -
@@ -234,7 +238,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                 )}
                 <Text
                   text={conn.line}
-                  x={scheduledX1 + 5}
+                  x={Math.max(scheduledX1 + 5, MARGIN.left)}
                   y={trackToY(conn.track) - 8}
                   fill={conn.color ? `#${conn.color.split("~")[1]}` : "#666"}
                   fontSize={14}

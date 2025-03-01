@@ -89,6 +89,7 @@ export const processConnections = (
   arrivalData: StationBoardResponse,
 ): DisplayConnection[] => {
   const now = new Date().getTime();
+  const twoHoursBeforeNow = now - 2 * 60 * 60 * 1000;
   const twoHoursFromNow = now + 2 * 60 * 60 * 1000;
 
   // Create combined list with source type
@@ -131,7 +132,7 @@ export const processConnections = (
     const connTime = new Date(
       conn.mode === "Departure" ? conn.departure_time : conn.arrival_time,
     ).getTime();
-    return connTime >= now && connTime <= twoHoursFromNow;
+    return connTime >= twoHoursBeforeNow && connTime <= twoHoursFromNow;
   });
 
   // Sort by time

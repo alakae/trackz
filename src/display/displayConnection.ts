@@ -57,21 +57,17 @@ export type DisplayConnection =
 export function getEffectiveArrivalTime(
   connection: ArrivalConnection | PassingConnection | TerminalConnection,
 ): Date | undefined {
-  if (connection.arr_delay === undefined) {
-    return undefined;
-  }
+  const delay = connection.arr_delay ?? 0;
   const effectiveTime = new Date(connection.arrival_time);
-  effectiveTime.setMinutes(effectiveTime.getMinutes() + connection.arr_delay);
+  effectiveTime.setMinutes(effectiveTime.getMinutes() + delay);
   return effectiveTime;
 }
 
 export function getEffectiveDepartureTime(
   connection: DepartureConnection | PassingConnection | TerminalConnection,
-): Date | undefined {
-  if (connection.dep_delay === undefined) {
-    return undefined;
-  }
+): Date {
+  const delay = connection.dep_delay ?? 0;
   const effectiveTime = new Date(connection.departure_time);
-  effectiveTime.setMinutes(effectiveTime.getMinutes() + connection.dep_delay);
+  effectiveTime.setMinutes(effectiveTime.getMinutes() + delay);
   return effectiveTime;
 }

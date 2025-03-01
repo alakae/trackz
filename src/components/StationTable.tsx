@@ -11,6 +11,9 @@ interface StationTableProps {
 }
 
 export const StationTable = ({ connections }: StationTableProps) => {
+  const now = new Date().getTime();
+  const twoHoursFromNow = now + 2 * 60 * 60 * 1000;
+
   return (
     <div className="station-table">
       <table>
@@ -24,63 +27,77 @@ export const StationTable = ({ connections }: StationTableProps) => {
           </tr>
         </thead>
         <tbody>
-          {connections.map((connection, index) => {
-            const [bgColor, textColor] = connection.color.split("~");
+          {connections
+            .filter((conn) => {
+              const connTime = new Date(
+                conn.mode === "Departure"
+                  ? conn.departure_time
+                  : conn.arrival_time,
+              ).getTime();
+              return connTime >= now && connTime <= twoHoursFromNow;
+            })
+            .map((connection, index) => {
+              const [bgColor, textColor] = connection.color.split("~");
 
-            const getTime = () => {
-              const arrivalTime =
-                connection.mode === "Arrival" ||
-                connection.mode === "Passing" ||
-                connection.mode === "Terminal"
-                  ? `${formatTime(
-                      (connection as ArrivalConnection | PassingConnection)
-                        .arrival_time,
-                    )}${
-                      connection.arr_delay ? ` (+${connection.arr_delay})` : ""
-                    }`
-                  : "";
+              const getTime = () => {
+                const arrivalTime =
+                  connection.mode === "Arrival" ||
+                  connection.mode === "Passing" ||
+                  connection.mode === "Terminal"
+                    ? `${formatTime(
+                        (connection as ArrivalConnection | PassingConnection)
+                          .arrival_time,
+                      )}${
+                        connection.arr_delay
+                          ? ` (+${connection.arr_delay})`
+                          : ""
+                      }`
+                    : "";
 
-              const departureTime =
-                connection.mode === "Departure" ||
-                connection.mode === "Passing" ||
-                connection.mode === "Terminal"
-                  ? `${formatTime(
-                      (connection as DepartureConnection | PassingConnection)
-                        .departure_time,
-                    )}${
-                      connection.dep_delay ? ` (+${connection.dep_delay})` : ""
-                    }`
-                  : "";
+                const departureTime =
+                  connection.mode === "Departure" ||
+                  connection.mode === "Passing" ||
+                  connection.mode === "Terminal"
+                    ? `${formatTime(
+                        (connection as DepartureConnection | PassingConnection)
+                          .departure_time,
+                      )}${
+                        connection.dep_delay
+                          ? ` (+${connection.dep_delay})`
+                          : ""
+                      }`
+                    : "";
 
-              if (arrivalTime && departureTime) {
-                return `${arrivalTime} - ${departureTime}`;
-              }
-              return arrivalTime || departureTime || "";
-            };
+                if (arrivalTime && departureTime) {
+                  return `${arrivalTime} - ${departureTime}`;
+                }
+                return arrivalTime || departureTime || "";
+              };
 
-            return (
-              <tr key={`${connection.mode}-${index}`}>
-                <td>{connection.mode.charAt(0)}</td>
-                <td
-                  style={{
-                    backgroundColor: `#${bgColor}`,
-                    color: `#${textColor}`,
-                  }}
-                >
-                  {connection.line} {connection["*Z"]?.replace(/^0+/, "") || ""}
-                </td>
-                <td>{getTime()}</td>
-                <td>{connection.terminal.name}</td>
-                <td
-                  style={{
-                    color: connection.changed_track ? "red" : "inherit",
-                  }}
-                >
-                  {connection.track}
-                </td>
-              </tr>
-            );
-          })}
+              return (
+                <tr key={`${connection.mode}-${index}`}>
+                  <td>{connection.mode.charAt(0)}</td>
+                  <td
+                    style={{
+                      backgroundColor: `#${bgColor}`,
+                      color: `#${textColor}`,
+                    }}
+                  >
+                    {connection.line}{" "}
+                    {connection["*Z"]?.replace(/^0+/, "") || ""}
+                  </td>
+                  <td>{getTime()}</td>
+                  <td>{connection.terminal.name}</td>
+                  <td
+                    style={{
+                      color: connection.changed_track ? "red" : "inherit",
+                    }}
+                  >
+                    {connection.track}
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
     </div>
