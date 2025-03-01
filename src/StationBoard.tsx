@@ -31,8 +31,17 @@ export const StationBoard = () => {
           ),
         ]);
 
-        if (!departureResponse.ok || !arrivalResponse.ok) {
-          throw new Error("Failed to fetch station board data");
+        if (!departureResponse.ok) {
+          setError(
+            `Failed to fetch departures: ${departureResponse.statusText}`,
+          );
+          setLoading(false);
+          return;
+        }
+        if (!arrivalResponse.ok) {
+          setError(`Failed to fetch arrivals: ${arrivalResponse.statusText}`);
+          setLoading(false);
+          return;
         }
 
         const departureData: StationBoardResponse =
@@ -47,7 +56,7 @@ export const StationBoard = () => {
         setConnections(sortedConnections);
         setStationName(departureData.stop.name);
         setLoading(false);
-      } catch (err) {
+      } catch {
         setError("Failed to load station board");
         setLoading(false);
       }
