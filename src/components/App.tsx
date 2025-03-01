@@ -4,6 +4,7 @@ import { Home } from "./Home.tsx";
 import { Stations } from "./Stations.tsx";
 import { About } from "./About.tsx";
 import { StationBoard } from "./StationBoard.tsx";
+import { PageTitle } from "./PageTitle.tsx";
 
 function App() {
   return (
@@ -30,10 +31,38 @@ function App() {
         </nav>
 
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/stations" element={<Stations />} />
-          <Route path="/station/:label" element={<StationBoard />} />
-          <Route path="/about" element={<About />} />
+          <Route
+            path="/"
+            element={
+              <PageTitle title="Home">
+                <Home />
+              </PageTitle>
+            }
+          />
+          <Route
+            path="/stations"
+            element={
+              <PageTitle title="Stations">
+                <Stations />
+              </PageTitle>
+            }
+          />
+          <Route
+            path="/station/:label"
+            element={
+              <PageTitle title="Station">
+                <StationBoard />
+              </PageTitle>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <PageTitle title="About">
+                <About />
+              </PageTitle>
+            }
+          />
         </Routes>
       </div>
     </Router>
