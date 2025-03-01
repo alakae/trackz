@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import "./css/StationTable.css";
-import { DisplayConnection } from "./display/displayConnection.ts";
+import "../css/StationTable.css";
+import { DisplayConnection } from "../display/displayConnection.ts";
 import { StationTable } from "./StationTable.tsx";
 import { StationDiagram } from "./StationDiagram.tsx";
-import { fetchStationBoard } from "./fetchStationBoard.ts";
+import { fetchStationBoard } from "../fetchStationBoard.ts";
 
 export const StationBoard = () => {
   const { label } = useParams<{ label: string }>();

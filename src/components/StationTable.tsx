@@ -3,8 +3,8 @@ import {
   DepartureConnection,
   DisplayConnection,
   PassingConnection,
-} from "./display/displayConnection";
-import { formatTime } from "./formatTime.ts";
+} from "../display/displayConnection.ts";
+import { formatTime } from "../formatTime.ts";
 
 interface StationTableProps {
   connections: DisplayConnection[];

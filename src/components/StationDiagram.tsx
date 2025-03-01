@@ -4,7 +4,7 @@ import {
   DisplayConnection,
   getEffectiveArrivalTime,
   getEffectiveDepartureTime,
-} from "./display/displayConnection";
+} from "../display/displayConnection.ts";
 
 interface StationDiagramProps {
   connections: DisplayConnection[];
