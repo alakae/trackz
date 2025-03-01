@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { Layer, Line, Rect, Stage, Text } from "react-konva";
+import { useMeasure } from "react-use";
 import {
   DisplayConnection,
   getEffectiveArrivalTime,
@@ -19,26 +20,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
     top: 30,
     bottom: 30,
   };
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 800, height: 500 });
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const { width, height } = entry.contentRect;
-        console.debug(width, height);
-        setDimensions({ width, height });
-      }
-    });
-
-    resizeObserver.observe(containerRef.current);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
+  const [ref, bounds] = useMeasure<HTMLDivElement>();
 
   // Get unique tracks and sort them
   const tracks = [
@@ -49,7 +31,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
     ),
   ].sort((a, b) => a - b);
   const trackHeight =
-    (dimensions.height - MARGIN.top - MARGIN.bottom) / tracks.length;
+    (bounds.height - MARGIN.top - MARGIN.bottom) / tracks.length;
 
   // Calculate time range (1 hour window)
   const now = new Date();
@@ -60,8 +42,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
     const t = time.getTime();
     return (
       MARGIN.left +
-      ((t - now.getTime()) / (endTime.getTime() - now.getTime())) *
-        dimensions.width
+      ((t - now.getTime()) / (endTime.getTime() - now.getTime())) * bounds.width
     );
   };
 
@@ -71,17 +52,17 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
     return MARGIN.top + index * trackHeight + trackHeight / 2;
   };
 
-  console.debug(dimensions);
   return (
     <div
-      ref={containerRef}
+      ref={ref}
       style={{
-        width: "100%",
-        height: "55vh",
-        overflow: "hidden",
+        width: "100vw",
+        maxWidth: "1200px",
+        height: "50vh",
+        minHeight: "500px",
       }}
     >
-      <Stage width={dimensions.width} height={dimensions.height}>
+      <Stage width={bounds.width} height={bounds.height}>
         <Layer>
           {/* Draw lines aligned with clock hours */}
           {(() => {
@@ -106,7 +87,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                       x,
                       MARGIN.top,
                       x,
-                      dimensions.height - MARGIN.bottom + 10,
+                      bounds.height - MARGIN.bottom + 10,
                     ]}
                     stroke={"#aaa"}
                     strokeWidth={isFullHour ? 2 : isQuarterHour ? 1 : 1}
@@ -119,7 +100,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                         ":00"
                       }
                       x={x - 10}
-                      y={dimensions.height - MARGIN.bottom + 12}
+                      y={bounds.height - MARGIN.bottom + 12}
                       fontSize={12}
                     />
                   )}
@@ -139,7 +120,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                 points={[
                   MARGIN.left,
                   trackToY(track),
-                  dimensions.width - MARGIN.right,
+                  bounds.width - MARGIN.right,
                   trackToY(track),
                 ]}
                 stroke="#ddd"

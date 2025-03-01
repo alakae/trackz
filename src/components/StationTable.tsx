@@ -18,9 +18,7 @@ export const StationTable = ({ connections }: StationTableProps) => {
           <tr>
             <th>Mode</th>
             <th>Line</th>
-            <th>*Z</th>
-            <th>Arrival Time</th>
-            <th>Departure Time</th>
+            <th>Time</th>
             <th>Terminal</th>
             <th>Track</th>
           </tr>
@@ -29,54 +27,49 @@ export const StationTable = ({ connections }: StationTableProps) => {
           {connections.map((connection, index) => {
             const [bgColor, textColor] = connection.color.split("~");
 
-            const getArrivalTime = () => {
-              if (
+            const getTime = () => {
+              const arrivalTime =
                 connection.mode === "Arrival" ||
                 connection.mode === "Passing" ||
                 connection.mode === "Terminal"
-              ) {
-                const arrDelay = connection.arr_delay
-                  ? ` (+${connection.arr_delay})`
+                  ? `${formatTime(
+                      (connection as ArrivalConnection | PassingConnection)
+                        .arrival_time,
+                    )}${
+                      connection.arr_delay ? ` (+${connection.arr_delay})` : ""
+                    }`
                   : "";
-                return `${formatTime(
-                  (connection as ArrivalConnection | PassingConnection)
-                    .arrival_time,
-                )}${arrDelay}`;
-              }
-              return "";
-            };
 
-            const getDepartureTime = () => {
-              if (
+              const departureTime =
                 connection.mode === "Departure" ||
                 connection.mode === "Passing" ||
                 connection.mode === "Terminal"
-              ) {
-                const depDelay = connection.dep_delay
-                  ? ` (+${connection.dep_delay})`
+                  ? `${formatTime(
+                      (connection as DepartureConnection | PassingConnection)
+                        .departure_time,
+                    )}${
+                      connection.dep_delay ? ` (+${connection.dep_delay})` : ""
+                    }`
                   : "";
-                return `${formatTime(
-                  (connection as DepartureConnection | PassingConnection)
-                    .departure_time,
-                )}${depDelay}`;
+
+              if (arrivalTime && departureTime) {
+                return `${arrivalTime} - ${departureTime}`;
               }
-              return "";
+              return arrivalTime || departureTime || "";
             };
 
             return (
               <tr key={`${connection.mode}-${index}`}>
-                <td>{connection.mode}</td>
+                <td>{connection.mode.charAt(0)}</td>
                 <td
                   style={{
                     backgroundColor: `#${bgColor}`,
                     color: `#${textColor}`,
                   }}
                 >
-                  {connection.line}
+                  {connection.line} {connection["*Z"]?.replace(/^0+/, "") || ""}
                 </td>
-                <td>{connection["*Z"]?.replace(/^0+/, "") || ""}</td>
-                <td>{getArrivalTime()}</td>
-                <td>{getDepartureTime()}</td>
+                <td>{getTime()}</td>
                 <td>{connection.terminal.name}</td>
                 <td
                   style={{
