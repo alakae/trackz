@@ -56,7 +56,7 @@ export type DisplayConnection =
 
 export function getEffectiveArrivalTime(
   connection: ArrivalConnection | PassingConnection | TerminalConnection,
-): Date | undefined {
+): Date {
   const delay = connection.arr_delay ?? 0;
   const effectiveTime = new Date(connection.arrival_time);
   effectiveTime.setMinutes(effectiveTime.getMinutes() + delay);

@@ -147,7 +147,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
             let effectiveX1: number | undefined,
               effectiveX2: number | undefined;
 
-            const minimum = 5;
+            const minimum = 20;
             if (conn.mode === "Passing" || conn.mode === "Terminal") {
               // Scheduled times
               scheduledX1 = timeToX(conn.arrival_time);
@@ -179,6 +179,9 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
 
               // Effective times
               const effectiveArrival = getEffectiveArrivalTime(conn);
+              if (effectiveArrival < now) {
+                return null;
+              }
               effectiveX1 = effectiveArrival
                 ? timeToX(effectiveArrival)
                 : undefined;
@@ -195,6 +198,10 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
 
               // Effective times
               const effectiveDeparture = getEffectiveDepartureTime(conn);
+              if (effectiveDeparture < now) {
+                return null;
+              }
+
               effectiveX2 = effectiveDeparture
                 ? timeToX(effectiveDeparture)
                 : undefined;
