@@ -4,7 +4,7 @@ import "../css/StationTable.css";
 import { DisplayConnection } from "../display/displayConnection.ts";
 import { StationTable } from "./StationTable.tsx";
 import { StationDiagram } from "./StationDiagram.tsx";
-import { fetchStationBoard } from "../fetchStationBoard.ts";
+import { fetchStationBoard } from "../display/fetchStationBoard.ts";
 
 export const StationBoard = () => {
   const { label } = useParams<{ label: string }>();

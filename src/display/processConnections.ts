@@ -1,11 +1,11 @@
-import { StationBoardResponse } from "./api/stationBoardResponse.ts";
+import { StationBoardResponse } from "../api/stationBoardResponse.ts";
 import {
   ArrivalConnection,
   DepartureConnection,
   DisplayConnection,
   PassingConnection,
   TerminalConnection,
-} from "./display/displayConnection.ts";
+} from "./displayConnection.ts";
 
 const findMatchingDeparture = (
   arrival: ArrivalConnection,

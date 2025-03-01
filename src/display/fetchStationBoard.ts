@@ -1,5 +1,5 @@
-import { DisplayConnection } from "./display/displayConnection.ts";
-import { StationBoardResponse } from "./api/stationBoardResponse.ts";
+import { DisplayConnection } from "./displayConnection.ts";
+import { StationBoardResponse } from "../api/stationBoardResponse.ts";
 import { processConnections } from "./processConnections.ts";
 
 interface StationBoardResult {
