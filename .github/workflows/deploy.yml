@@ -27,11 +27,8 @@ jobs:
       - name: Install dependencies
         run: devbox run -- npm ci
 
-      - name: Build TypeScript
-        run: devbox run -- tsc -b
-
       - name: Build Vite
-        run: devbox run -- vite build --base=/trackz/
+        run: devbox run -- npm run build -- --base=/trackz/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
