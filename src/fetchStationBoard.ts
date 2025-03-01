@@ -10,17 +10,15 @@ interface StationBoardResult {
 export async function fetchStationBoard(
   label: string,
 ): Promise<StationBoardResult> {
+  const baseURL = "https://search.ch/timetable/api/stationboard.json";
+  const queryParams = `stop=${encodeURIComponent(label)}&show_tracks=1&show_delays=1&transportation_types=train`;
+
+  const departureURL = `${baseURL}?${queryParams}&mode=departure`;
+  const arrivalURL = `${baseURL}?${queryParams}&mode=arrival`;
+
   const [departureResponse, arrivalResponse] = await Promise.all([
-    fetch(
-      `https://search.ch/timetable/api/stationboard.json?stop=${encodeURIComponent(
-        label,
-      )}&show_tracks=1&show_delays=1&mode=departure&transportation_types=train`,
-    ),
-    fetch(
-      `https://search.ch/timetable/api/stationboard.json?stop=${encodeURIComponent(
-        label,
-      )}&show_tracks=1&show_delays=1&mode=arrival&transportation_types=train`,
-    ),
+    fetch(departureURL),
+    fetch(arrivalURL),
   ]);
 
   if (!departureResponse.ok) {
