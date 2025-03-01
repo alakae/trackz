@@ -147,7 +147,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
             let effectiveX1: number | undefined,
               effectiveX2: number | undefined;
 
-            const minimum = 20;
+            const minimum = 5;
             if (conn.mode === "Passing" || conn.mode === "Terminal") {
               // Scheduled times
               scheduledX1 = timeToX(conn.arrival_time);
