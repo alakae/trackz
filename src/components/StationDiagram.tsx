@@ -76,6 +76,9 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
             // Generate lines until we reach past the end time
             while (currentTime <= endTime) {
               const x = timeToX(currentTime);
+              if (x < MARGIN.left) {
+                continue;
+              }
               const minutes = currentTime.getMinutes();
               const isFullHour = minutes === 0;
               const isQuarterHour = minutes % 15 === 0 && !isFullHour;
@@ -93,17 +96,18 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                     strokeWidth={isFullHour ? 2 : isQuarterHour ? 1 : 1}
                     dash={isFullHour || isQuarterHour ? [] : [4, 4]} // Dashed line for every 5 minutes
                   />
-                  {isFullHour && (
-                    <Text
-                      text={
-                        currentTime.getHours().toString().padStart(2, "0") +
-                        ":00"
-                      }
-                      x={x - 10}
-                      y={bounds.height - MARGIN.bottom + 12}
-                      fontSize={12}
-                    />
-                  )}
+
+                  <Text
+                    text={
+                      currentTime.getHours().toString().padStart(2, "0") +
+                      ":" +
+                      currentTime.getMinutes().toString().padStart(2, "0")
+                    }
+                    x={x - 15}
+                    y={bounds.height - MARGIN.bottom + 12}
+                    fontSize={12}
+                    fill="white"
+                  />
                 </React.Fragment>,
               );
 
