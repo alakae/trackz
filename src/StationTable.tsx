@@ -1,9 +1,10 @@
 import {
-  DisplayConnection,
   ArrivalConnection,
-  PassingConnection,
   DepartureConnection,
+  DisplayConnection,
+  PassingConnection,
 } from "./display/displayConnection";
+import { formatTime } from "./formatTime.ts";
 
 interface StationTableProps {
   connections: DisplayConnection[];
@@ -27,14 +28,6 @@ export const StationTable = ({ connections }: StationTableProps) => {
         <tbody>
           {connections.map((connection, index) => {
             const [bgColor, textColor] = connection.color.split("~");
-
-            const formatTime = (timestamp: Date | undefined) => {
-              if (!timestamp) return "";
-              return timestamp.toLocaleTimeString("de-CH", {
-                hour: "2-digit",
-                minute: "2-digit",
-              });
-            };
 
             const getArrivalTime = () => {
               if (
