@@ -77,9 +77,10 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
             currentTime.setMinutes(Math.ceil(startMinutes / 5) * 5, 0, 0);
 
             // Generate lines until we reach past the end time
-            while (currentTime <= endTime) {
+            while (currentTime < endTime) {
               const x = timeToX(currentTime);
               if (x < MARGIN.left) {
+                currentTime = new Date(currentTime.getTime() + 5 * 60 * 1000);
                 continue;
               }
               const minutes = currentTime.getMinutes();
