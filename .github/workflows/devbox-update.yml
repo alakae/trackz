@@ -22,7 +22,6 @@ jobs:
         run: |
           if git fetch origin automated/devbox-update; then
             git checkout automated/devbox-update
-          fi
           else
             git checkout -b automated/devbox-update
           fi
