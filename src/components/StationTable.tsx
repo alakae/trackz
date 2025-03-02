@@ -2,17 +2,22 @@ import {
   ArrivalConnection,
   DepartureConnection,
   DisplayConnection,
+  getEffectiveArrivalTime,
+  getEffectiveDepartureTime,
   PassingConnection,
+  TerminalConnection,
 } from "../display/displayConnection.ts";
 import { formatTime } from "../utils/formatTime.ts";
+import { useTriggerAutoRefresh } from "../utils/useTriggerAutoRefresh.tsx";
 
 interface StationTableProps {
   connections: DisplayConnection[];
 }
 
 export const StationTable = ({ connections }: StationTableProps) => {
+  useTriggerAutoRefresh();
   const now = new Date().getTime();
-  const twoHoursFromNow = now + 2 * 60 * 60 * 1000;
+  const oneHourFromNow = now + 60 * 60 * 1000;
 
   return (
     <div className="station-table">
@@ -30,11 +35,34 @@ export const StationTable = ({ connections }: StationTableProps) => {
           {connections
             .filter((conn) => {
               const connTime = new Date(
-                conn.mode === "Departure"
-                  ? conn.departure_time
-                  : conn.arrival_time,
+                conn.mode === "Arrival"
+                  ? getEffectiveArrivalTime(conn)
+                  : getEffectiveDepartureTime(conn),
               ).getTime();
-              return connTime >= now && connTime <= twoHoursFromNow;
+              return connTime >= now && connTime <= oneHourFromNow;
+            })
+            .sort((a, b) => {
+              const timeA =
+                a.mode === "Arrival"
+                  ? (a as ArrivalConnection).arrival_time
+                  : (
+                      a as
+                        | DepartureConnection
+                        | PassingConnection
+                        | TerminalConnection
+                    ).departure_time;
+
+              const timeB =
+                b.mode === "Arrival"
+                  ? (b as ArrivalConnection).arrival_time
+                  : (
+                      b as
+                        | DepartureConnection
+                        | PassingConnection
+                        | TerminalConnection
+                    ).departure_time;
+
+              return timeA.getTime() - timeB.getTime();
             })
             .map((connection, index) => {
               const [bgColor, textColor] = connection.color.split("~");
