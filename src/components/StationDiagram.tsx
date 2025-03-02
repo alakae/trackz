@@ -212,7 +212,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                 <Rect
                   x={Math.max(scheduledX1, MARGIN.left)}
                   y={trackToY(conn.track) - 20 / 2}
-                  width={scheduledX2 - scheduledX1}
+                  width={scheduledX2 - Math.max(scheduledX1, MARGIN.left)}
                   height={20}
                   fill={conn.color ? `#${conn.color.split("~")[0]}` : "#666"}
                   cornerRadius={5}
@@ -220,12 +220,9 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                 {(effectiveX1 !== scheduledX1 ||
                   effectiveX2 !== scheduledX2) && (
                   <Rect
-                    x={Math.max(effectiveX1 ?? scheduledX1, MARGIN.left)}
+                    x={Math.max(effectiveX1, MARGIN.left)}
                     y={trackToY(conn.track) - 20 / 2}
-                    width={
-                      (effectiveX2 ?? scheduledX2) -
-                      (effectiveX1 ?? scheduledX1)
-                    }
+                    width={effectiveX2 - Math.max(effectiveX1, MARGIN.left)}
                     height={20}
                     fill="transparent"
                     stroke={
