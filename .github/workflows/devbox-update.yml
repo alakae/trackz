@@ -6,7 +6,7 @@ on:
   workflow_dispatch: # Allows manual triggering
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
 
 jobs:
@@ -28,22 +28,25 @@ jobs:
             echo "changes=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Create PR
+      - name: Setup git
         if: steps.git-check.outputs.changes == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
-          # Setup git
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Create branch and commit
+      - name: Commit changes
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
           git checkout -b automated/devbox-update
           git add devbox.lock
           git commit -m "chore(deps): update devbox.lock"
           git push -f origin automated/devbox-update
 
-          # Check if PR exists and create or update accordingly
+      - name: Create or update PR
+        if: steps.git-check.outputs.changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
           if ! gh pr view automated/devbox-update &>/dev/null; then
             gh pr create \
               --title "chore(deps): update devbox dependencies" \
