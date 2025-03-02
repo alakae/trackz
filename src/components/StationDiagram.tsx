@@ -253,7 +253,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                 )}
                 <Text
                   text={conn.line}
-                  x={Math.max(scheduledX1 + 5, MARGIN.left)}
+                  x={Math.max(scheduledX1, MARGIN.left) + 5}
                   y={trackToY(conn.track) - 8}
                   fill={conn.color ? `#${conn.color.split("~")[1]}` : "#666"}
                   fontSize={14}
