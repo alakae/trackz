@@ -18,6 +18,15 @@ jobs:
       - name: Install devbox
         uses: jetify-com/devbox-install-action@v0.12.0
 
+      - name: Switch to update branch if it exists
+        run: |
+          if git fetch origin automated/devbox-update; then
+            git checkout automated/devbox-update
+          fi
+          else
+            git checkout -b automated/devbox-update
+          fi
+
       - name: Update Devbox
         run: devbox update
 
@@ -37,7 +46,6 @@ jobs:
       - name: Commit changes
         if: steps.git-check.outputs.changes == 'true'
         run: |
-          git checkout -b automated/devbox-update
           git add devbox.lock
           git commit -m "chore(deps): update devbox.lock"
           git push -f origin automated/devbox-update
