@@ -1,4 +1,4 @@
-name: Devbox Update
+name: Devbox Updates
 
 on:
   schedule:
