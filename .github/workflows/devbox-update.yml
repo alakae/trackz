@@ -54,12 +54,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if ! gh pr view automated/devbox-update &>/dev/null; then
-            gh pr create \
-              --title "chore(deps): update devbox dependencies" \
-              --body "This PR updates devbox dependencies to their latest versions.
+          gh pr create \
+            --title "chore(deps): update devbox dependencies" \
+            --body "This PR updates devbox dependencies to their latest versions.
 
-              This is an automated PR created by the devbox-update workflow." \
-              --base master \
-              --head automated/devbox-update
-          fi
+            This is an automated PR created by the devbox-update workflow." \
+            --base master \
+            --head automated/devbox-update || echo "PR already exists or failed to create"
