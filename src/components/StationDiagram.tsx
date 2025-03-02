@@ -147,8 +147,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
           {/* Draw trains */}
           {connections.map((conn, index) => {
             let scheduledX1: number, scheduledX2: number;
-            let effectiveX1: number | undefined,
-              effectiveX2: number | undefined;
+            let effectiveX1: number, effectiveX2: number;
 
             const minimum = 20;
             if (conn.mode === "Passing" || conn.mode === "Terminal") {
@@ -166,15 +165,11 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                 return null;
               }
 
-              effectiveX1 = effectiveArrival
-                ? timeToX(effectiveArrival)
-                : undefined;
-              effectiveX2 = effectiveDeparture
-                ? Math.max(
-                    (effectiveX1 || 0) + minimum,
-                    timeToX(effectiveDeparture),
-                  )
-                : undefined;
+              effectiveX1 = timeToX(effectiveArrival);
+              effectiveX2 = Math.max(
+                effectiveX1 + minimum,
+                timeToX(effectiveDeparture),
+              );
             } else if (conn.mode === "Arrival") {
               // Scheduled times
               scheduledX1 = timeToX(conn.arrival_time);
@@ -185,11 +180,8 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
               if (effectiveArrival < now) {
                 return null;
               }
-              effectiveX1 = effectiveArrival
-                ? timeToX(effectiveArrival)
-                : undefined;
-              effectiveX2 =
-                effectiveX1 !== undefined ? effectiveX1 + minimum : undefined;
+              effectiveX1 = timeToX(effectiveArrival);
+              effectiveX2 = effectiveX1 + minimum;
             } else {
               // Departure
               // Scheduled times
@@ -205,18 +197,9 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                 return null;
               }
 
-              effectiveX2 = effectiveDeparture
-                ? timeToX(effectiveDeparture)
-                : undefined;
-              effectiveX1 =
-                effectiveX2 !== undefined
-                  ? Math.max(effectiveX2 - minimum, MARGIN.left)
-                  : undefined;
-              if (
-                effectiveX1 !== undefined &&
-                effectiveX2 !== undefined &&
-                effectiveX2 - effectiveX1 < minimum
-              ) {
+              effectiveX2 = timeToX(effectiveDeparture);
+              effectiveX1 = Math.max(effectiveX2 - minimum, MARGIN.left);
+              if (effectiveX2 - effectiveX1 < minimum) {
                 effectiveX2 = effectiveX1 + minimum;
               }
             }
