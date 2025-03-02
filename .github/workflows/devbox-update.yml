@@ -49,10 +49,13 @@ jobs:
           git commit -m "chore(deps): update devbox.lock"
           git push -f origin automated/devbox-update
 
+      - name: Authenticate gh CLI with PAT
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: echo "$PAT_TOKEN" | gh auth login --with-token
+
       - name: Create or update PR
         if: steps.git-check.outputs.changes == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create \
             --title "chore(deps): update devbox dependencies" \
