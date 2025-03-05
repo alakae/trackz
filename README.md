@@ -16,13 +16,8 @@ The latest image is automatically deployed at [trackz.ch](http://trackz.ch).
 To execute the app in the development mode either run
 
 ```
-devbox run dev
-```
-
-or
-
-```
-npm run dev
+devbox run -- npm ci
+devbox run -- npm run dev
 ```
 
 The page will reload if you make edits. You will also see any lint errors in the console.

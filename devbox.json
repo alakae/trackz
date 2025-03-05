@@ -3,8 +3,6 @@
   "packages": ["nodejs@latest"],
   "shell": {
     "init_hook": ["echo 'Welcome to devbox!' > /dev/null"],
-    "scripts": {
-      "dev": ["npm run dev"]
-    }
+    "scripts": {}
   }
 }
