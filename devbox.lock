@@ -2,7 +2,7 @@
   "lockfile_version": "1",
   "packages": {
     "github:NixOS/nixpkgs/nixpkgs-unstable": {
-      "resolved": "github:NixOS/nixpkgs/bd3bac8bfb542dbde7ffffb6987a1a1f9d41699f?lastModified=1743014863&narHash=sha256-jAIUqsiN2r3hCuHji80U7NNEafpIMBXiwKlSrjWMlpg%3D"
+      "resolved": "github:NixOS/nixpkgs/6c5963357f3c1c840201eda129a99d455074db04?lastModified=1743076231&narHash=sha256-yQugdVfi316qUfqzN8JMaA2vixl%2B45GxNm4oUfXlbgw%3D"
     },
     "nodejs@latest": {
       "last_modified": "2025-03-16T16:17:41Z",
@@ -29,15 +29,15 @@
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/1kyg749m82ay2j4kkhaqlr4cp56i5h4h-nodejs-23.10.0",
+              "path": "/nix/store/m7j1lf8a4z5bfla1m78pa3y12888hl7b-nodejs-23.10.0",
               "default": true
             },
             {
               "name": "libv8",
-              "path": "/nix/store/0pfi6zsdlri5p8dyvgna336kw2hb1cwg-nodejs-23.10.0-libv8"
+              "path": "/nix/store/kfvlfxx83n2w2fyb8hiz4p4dc165r035-nodejs-23.10.0-libv8"
             }
           ],
-          "store_path": "/nix/store/1kyg749m82ay2j4kkhaqlr4cp56i5h4h-nodejs-23.10.0"
+          "store_path": "/nix/store/m7j1lf8a4z5bfla1m78pa3y12888hl7b-nodejs-23.10.0"
         },
         "x86_64-darwin": {
           "outputs": [
