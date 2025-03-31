@@ -13,11 +13,11 @@
   },
   "dependencies": {
     "dompurify": "^3.2.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "react-konva": "^19.0.3",
-    "react-router": "^7.4.0",
-    "react-router-dom": "^7.4.0",
+    "react-router": "^7.4.1",
+    "react-router-dom": "^7.4.1",
     "react-use": "^17.6.0"
   },
   "devDependencies": {
