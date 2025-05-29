@@ -25,6 +25,7 @@ updates:
           - "eslint*"
           - "@eslint/*"
           - "vite*"
+          - "@vitejs/*"
           - "globals"
         update-types:
           - "minor"
