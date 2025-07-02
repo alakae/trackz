@@ -2,8 +2,8 @@
   "lockfile_version": "1",
   "packages": {
     "github:NixOS/nixpkgs/nixpkgs-unstable": {
-      "last_modified": "2025-06-30T02:52:09Z",
-      "resolved": "github:NixOS/nixpkgs/b95255df2360a45ddbb03817a68869d5cb01bf96?lastModified=1751251929&narHash=sha256-IJWIzZSkBsDzS7iS%2FiwSwur%2BxFkWqeLYC4kdf8ObtOM%3D"
+      "last_modified": "2025-07-01T05:58:53Z",
+      "resolved": "github:NixOS/nixpkgs/bdfd0f2afcf764e531d0960c821ab070a6174b15?lastModified=1751349533&narHash=sha256-5XRh0mB06%2F7WYDLu9ZXsx1GhyvvNVZDtPyg34sUCLJs%3D"
     },
     "nodejs@latest": {
       "last_modified": "2025-06-25T07:32:58Z",
