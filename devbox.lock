@@ -2,8 +2,8 @@
   "lockfile_version": "1",
   "packages": {
     "github:NixOS/nixpkgs/nixpkgs-unstable": {
-      "last_modified": "2025-07-07T01:36:15Z",
-      "resolved": "github:NixOS/nixpkgs/2defa37146df235ef62f566cde69930a86f14df1?lastModified=1751852175&narHash=sha256-%2BMLlfTCCOvz4K6AcSPbaPiFM9MYi7fA2Wr1ibmRwIlM%3D"
+      "last_modified": "2025-07-08T04:39:49Z",
+      "resolved": "github:NixOS/nixpkgs/9b008d60392981ad674e04016d25619281550a9d?lastModified=1751949589&narHash=sha256-mgFxAPLWw0Kq%2BC8P3dRrZrOYEQXOtKuYVlo9xvPntt8%3D"
     },
     "nodejs@latest": {
       "last_modified": "2025-07-06T07:15:37Z",
@@ -38,12 +38,12 @@
               "default": true
             },
             {
-              "name": "dev",
-              "path": "/nix/store/khd9qh8d0rabik9nsmg9w18cyx8nzzc6-nodejs-24.3.0-dev"
-            },
-            {
               "name": "libv8",
               "path": "/nix/store/qqfcy6sswbbddb9yj93yjaxhaqzl1z1r-nodejs-24.3.0-libv8"
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/khd9qh8d0rabik9nsmg9w18cyx8nzzc6-nodejs-24.3.0-dev"
             }
           ],
           "store_path": "/nix/store/40zqxjn7jp8j2bmhj1z072z8n6fkwarw-nodejs-24.3.0"
@@ -56,12 +56,12 @@
               "default": true
             },
             {
-              "name": "libv8",
-              "path": "/nix/store/50vkp7d0lwgpb8zj45m88xbkzq7g6z6l-nodejs-24.3.0-libv8"
-            },
-            {
               "name": "dev",
               "path": "/nix/store/xhjahnbnbmbv06cj1js7435mdmwgkg8n-nodejs-24.3.0-dev"
+            },
+            {
+              "name": "libv8",
+              "path": "/nix/store/50vkp7d0lwgpb8zj45m88xbkzq7g6z6l-nodejs-24.3.0-libv8"
             }
           ],
           "store_path": "/nix/store/xwndpjk8qxx6d1lrll4vya85hxi2b4ql-nodejs-24.3.0"
