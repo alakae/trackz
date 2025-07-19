@@ -2,13 +2,13 @@
   "lockfile_version": "1",
   "packages": {
     "github:NixOS/nixpkgs/nixpkgs-unstable": {
-      "last_modified": "2025-07-17T10:11:59Z",
-      "resolved": "github:NixOS/nixpkgs/fa0ef8a6bb1651aa26c939aeb51b5f499e86b0ec?lastModified=1752747119&narHash=sha256-2Kp9St3Pbsmu%2BxMsobLcgzzUxPvZR7alVJWyuk2BAPc%3D"
+      "last_modified": "2025-07-18T03:30:42Z",
+      "resolved": "github:NixOS/nixpkgs/e821e03193486359aa942372be2d9c1f377b7a18?lastModified=1752809442&narHash=sha256-7fALxZGWDspRe79LaDwIdmkDl568Cphfvr83PGCXUUQ%3D"
     },
     "nodejs@latest": {
-      "last_modified": "2025-07-15T16:15:05Z",
+      "last_modified": "2025-07-16T16:36:02Z",
       "plugin_version": "0.0.2",
-      "resolved": "github:NixOS/nixpkgs/dab3a6e781554f965bde3def0aa2fda4eb8f1708#nodejs_24",
+      "resolved": "github:NixOS/nixpkgs/fa64ec5c1ca6f17746f3defedb988b9248e97616#nodejs_24",
       "source": "devbox-search",
       "version": "24.4.0",
       "systems": {
@@ -56,12 +56,12 @@
               "default": true
             },
             {
-              "name": "dev",
-              "path": "/nix/store/cxq8jrph2lb1bq0zvwn9j73v62ci988p-nodejs-24.4.0-dev"
-            },
-            {
               "name": "libv8",
               "path": "/nix/store/v3s789l4jcnl63a4yzsg8lhjapk5sz8h-nodejs-24.4.0-libv8"
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/cxq8jrph2lb1bq0zvwn9j73v62ci988p-nodejs-24.4.0-dev"
             }
           ],
           "store_path": "/nix/store/kspjc0h51f7rs7071b64jl4vk2snwx6y-nodejs-24.4.0"
@@ -74,12 +74,12 @@
               "default": true
             },
             {
-              "name": "dev",
-              "path": "/nix/store/mr1llyri5bvls15dp9i7rzcnn1ss0r30-nodejs-24.4.0-dev"
-            },
-            {
               "name": "libv8",
               "path": "/nix/store/1m6rbpkvkmdlxzj6cr2sbpx70jijzml1-nodejs-24.4.0-libv8"
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/mr1llyri5bvls15dp9i7rzcnn1ss0r30-nodejs-24.4.0-dev"
             }
           ],
           "store_path": "/nix/store/373xx13nrabzwzb9mqa5bb3x0f5zkk1s-nodejs-24.4.0"
