@@ -6,9 +6,9 @@
       "resolved": "github:NixOS/nixpkgs/6027c30c8e9810896b92429f0092f624f7b1aace?lastModified=1753432016&narHash=sha256-cnL5WWn%2FxkZoyH%2F03NNUS7QgW5vI7D1i74g48qplCvg%3D"
     },
     "nodejs@latest": {
-      "last_modified": "2025-07-24T23:24:55Z",
+      "last_modified": "2025-07-25T08:26:56Z",
       "plugin_version": "0.0.2",
-      "resolved": "github:NixOS/nixpkgs/0d00f23f023b7215b3f1035adb5247c8ec180dbc#nodejs_24",
+      "resolved": "github:NixOS/nixpkgs/6027c30c8e9810896b92429f0092f624f7b1aace#nodejs_24",
       "source": "devbox-search",
       "version": "24.4.1",
       "systems": {
@@ -74,12 +74,12 @@
               "default": true
             },
             {
-              "name": "libv8",
-              "path": "/nix/store/rla4nj6lpf3dz3fxqbgqzvlm3bwd0545-nodejs-24.4.1-libv8"
-            },
-            {
               "name": "dev",
               "path": "/nix/store/7865hgg0qmbyambm53765ddy96qsg1vs-nodejs-24.4.1-dev"
+            },
+            {
+              "name": "libv8",
+              "path": "/nix/store/rla4nj6lpf3dz3fxqbgqzvlm3bwd0545-nodejs-24.4.1-libv8"
             }
           ],
           "store_path": "/nix/store/2bg4yn1ccasnw6cscqhgqwzfw8j2xq1m-nodejs-24.4.1"
