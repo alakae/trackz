@@ -21,7 +21,7 @@ jobs:
       - name: Check for outdated packages
         id: check-outdated
         run: |
-          output=$(devbox ls --outdated)
+          output=$(devbox ls --outdated 2>&1)
           echo "Output: $output"
 
           if echo "$output" | grep -q "Your packages are up to date!"; then
