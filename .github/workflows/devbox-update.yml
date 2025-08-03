@@ -18,7 +18,22 @@ jobs:
       - name: Install devbox
         uses: jetify-com/devbox-install-action@v0.13.0
 
+      - name: Check for outdated packages
+        id: check-outdated
+        run: |
+          output=$(devbox ls --outdated)
+          echo "Output: $output"
+
+          if echo "$output" | grep -q "Your packages are up to date!"; then
+            echo "updates_available=false" >> $GITHUB_OUTPUT
+            echo "No updates available"
+          else
+            echo "updates_available=true" >> $GITHUB_OUTPUT
+            echo "Updates available"
+          fi
+
       - name: Switch to update branch if it exists
+        if: steps.check-outdated.outputs.updates_available == 'true'
         run: |
           if git fetch origin automated/devbox-update; then
             git checkout automated/devbox-update
@@ -27,35 +42,30 @@ jobs:
           fi
 
       - name: Update Devbox
+        if: steps.check-outdated.outputs.updates_available == 'true'
         run: devbox update
 
-      - name: Check for changes
-        id: git-check
-        run: |
-          if [[ -n "$(git status --porcelain)" ]]; then
-            echo "changes=true" >> $GITHUB_OUTPUT
-          fi
-
       - name: Setup git
-        if: steps.git-check.outputs.changes == 'true'
+        if: steps.check-outdated.outputs.updates_available == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Commit changes
-        if: steps.git-check.outputs.changes == 'true'
+        if: steps.check-outdated.outputs.updates_available == 'true'
         run: |
           git add devbox.lock
           git commit -m "chore(deps): update devbox.lock"
           git push -f origin automated/devbox-update
 
       - name: Authenticate gh CLI with PAT
+        if: steps.check-outdated.outputs.updates_available == 'true'
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: echo "$PAT_TOKEN" | gh auth login --with-token
 
       - name: Create or update PR
-        if: steps.git-check.outputs.changes == 'true'
+        if: steps.check-outdated.outputs.updates_available == 'true'
         run: |
           gh pr create \
             --title "chore(deps): update devbox dependencies" \
@@ -64,3 +74,7 @@ jobs:
             This is an automated PR created by the devbox-update workflow." \
             --base master \
             --head automated/devbox-update || echo "PR already exists or failed to create"
+
+      - name: Log no updates needed
+        if: steps.check-outdated.outputs.updates_available == 'false'
+        run: echo "No devbox updates available, skipping update process"
