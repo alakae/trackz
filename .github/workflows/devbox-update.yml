@@ -18,6 +18,14 @@ jobs:
       - name: Install devbox
         uses: jetify-com/devbox-install-action@v0.13.0
 
+      - name: Switch to update branch if it exists
+        run: |
+          if git fetch origin automated/devbox-update; then
+            git checkout automated/devbox-update
+          else
+            git checkout -b automated/devbox-update
+          fi
+
       - name: Check for outdated packages
         id: check-outdated
         run: |
@@ -30,15 +38,6 @@ jobs:
           else
             echo "updates_available=true" >> $GITHUB_OUTPUT
             echo "Updates available"
-          fi
-
-      - name: Switch to update branch if it exists
-        if: steps.check-outdated.outputs.updates_available == 'true'
-        run: |
-          if git fetch origin automated/devbox-update; then
-            git checkout automated/devbox-update
-          else
-            git checkout -b automated/devbox-update
           fi
 
       - name: Update Devbox
