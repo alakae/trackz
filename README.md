@@ -3,7 +3,7 @@
 [![Built with Devbox](https://www.jetify.com/img/devbox/shield_galaxy.svg)](https://www.jetify.com/devbox/docs/contributor-quickstart/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-> Graphical arrival and departue board for railway stations in Switzerland.
+> Graphical arrival and departure board for railway stations in Switzerland.
 
 This is a just for fun project.
 
