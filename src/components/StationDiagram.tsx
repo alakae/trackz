@@ -152,19 +152,17 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
 
             const minimum = 20;
             if (conn.mode === "Passing" || conn.mode === "Terminal") {
-              // Scheduled times
-              scheduledX1 = timeToX(conn.arrival_time);
-              scheduledX2 = Math.max(
-                scheduledX1 + minimum,
-                timeToX(conn.departure_time),
-              );
-
-              // Effective times
               const effectiveArrival = getEffectiveArrivalTime(conn);
               const effectiveDeparture = getEffectiveDepartureTime(conn);
               if (effectiveDeparture < now) {
                 return null;
               }
+
+              scheduledX1 = timeToX(conn.arrival_time);
+              scheduledX2 = Math.max(
+                scheduledX1 + minimum,
+                timeToX(conn.departure_time),
+              );
 
               effectiveX1 = timeToX(effectiveArrival);
               effectiveX2 = Math.max(
@@ -172,57 +170,72 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                 timeToX(effectiveDeparture),
               );
             } else if (conn.mode === "Arrival") {
-              // Scheduled times
-              scheduledX1 = timeToX(conn.arrival_time);
-              scheduledX2 = scheduledX1 + minimum;
-
-              // Effective times
               const effectiveArrival = getEffectiveArrivalTime(conn);
               if (effectiveArrival < now) {
                 return null;
               }
+
+              scheduledX1 = timeToX(conn.arrival_time);
+              scheduledX2 = scheduledX1 + minimum;
+
               effectiveX1 = timeToX(effectiveArrival);
               effectiveX2 = effectiveX1 + minimum;
             } else {
               // Departure
-              // Scheduled times
-              scheduledX2 = timeToX(conn.departure_time);
-              scheduledX1 = Math.max(scheduledX2 - minimum, MARGIN.left);
-              if (scheduledX2 - scheduledX1 < minimum) {
-                scheduledX2 = scheduledX1 + minimum;
-              }
-
-              // Effective times
               const effectiveDeparture = getEffectiveDepartureTime(conn);
               if (effectiveDeparture < now) {
                 return null;
               }
 
+              scheduledX2 = timeToX(conn.departure_time);
+              scheduledX1 = scheduledX2 - minimum;
+
               effectiveX2 = timeToX(effectiveDeparture);
-              effectiveX1 = Math.max(effectiveX2 - minimum, MARGIN.left);
-              if (effectiveX2 - effectiveX1 < minimum) {
-                effectiveX2 = effectiveX1 + minimum;
-              }
+              effectiveX1 = effectiveX2 - minimum;
             }
 
             if (!conn.track) return null;
 
+            // Clamp scheduled box to visible area
+            const clampedScheduledX1 = Math.max(scheduledX1, MARGIN.left);
+            const clampedScheduledX2 = scheduledX2;
+            const scheduledWidth = clampedScheduledX2 - clampedScheduledX1;
+
+            // Clamp effective box to visible area
+            const clampedEffectiveX1 = Math.max(effectiveX1, MARGIN.left);
+            const clampedEffectiveX2 = effectiveX2;
+            const effectiveWidth = clampedEffectiveX2 - clampedEffectiveX1;
+
+            // Skip if both boxes are entirely off-screen to the left
+            if (
+              clampedScheduledX2 <= MARGIN.left &&
+              clampedEffectiveX2 <= MARGIN.left
+            ) {
+              return null;
+            }
+
+            const hasDelay =
+              effectiveX1 !== scheduledX1 || effectiveX2 !== scheduledX2;
+
             return (
               <React.Fragment key={index}>
-                <Rect
-                  x={Math.max(scheduledX1, MARGIN.left)}
-                  y={trackToY(conn.track) - 20 / 2}
-                  width={scheduledX2 - Math.max(scheduledX1, MARGIN.left)}
-                  height={20}
-                  fill={conn.color ? `#${conn.color.split("~")[0]}` : "#666"}
-                  cornerRadius={5}
-                />
-                {(effectiveX1 !== scheduledX1 ||
-                  effectiveX2 !== scheduledX2) && (
+                {/* Scheduled position (solid fill) */}
+                {scheduledWidth > 0 && (
                   <Rect
-                    x={Math.max(effectiveX1, MARGIN.left)}
+                    x={clampedScheduledX1}
                     y={trackToY(conn.track) - 20 / 2}
-                    width={effectiveX2 - Math.max(effectiveX1, MARGIN.left)}
+                    width={scheduledWidth}
+                    height={20}
+                    fill={conn.color ? `#${conn.color.split("~")[0]}` : "#666"}
+                    cornerRadius={5}
+                  />
+                )}
+                {/* Effective position (outline) when delayed */}
+                {hasDelay && effectiveWidth > 0 && (
+                  <Rect
+                    x={clampedEffectiveX1}
+                    y={trackToY(conn.track) - 20 / 2}
+                    width={effectiveWidth}
                     height={20}
                     fill="transparent"
                     stroke={
@@ -232,13 +245,22 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                     cornerRadius={5}
                   />
                 )}
-                <Text
-                  text={conn.line}
-                  x={Math.max(scheduledX1, MARGIN.left) + 5}
-                  y={trackToY(conn.track) - 8}
-                  fill={conn.color ? `#${conn.color.split("~")[1]}` : "#666"}
-                  fontSize={14}
-                />
+                {/* Label - position at whichever box is visible */}
+                {(scheduledWidth > 0 || effectiveWidth > 0) && (
+                  <Text
+                    text={conn.line}
+                    x={
+                      Math.max(
+                        clampedScheduledX1,
+                        clampedEffectiveX1,
+                        MARGIN.left,
+                      ) + 5
+                    }
+                    y={trackToY(conn.track) - 8}
+                    fill={conn.color ? `#${conn.color.split("~")[1]}` : "#fff"}
+                    fontSize={14}
+                  />
+                )}
               </React.Fragment>
             );
           })}
