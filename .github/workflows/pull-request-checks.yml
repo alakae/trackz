@@ -2,6 +2,9 @@ name: Pull Request Checks
 
 on: [pull_request, push]
 
+permissions:
+  contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -37,7 +40,7 @@ jobs:
           persist-credentials: false
 
       - name: Run zizmor 🌈
-        uses: zizmorcore/zizmor-action@v1
+        uses: zizmorcore/zizmor-action@e639db99335bc9038abc0e066dfcd72e23d26fb4 # v0.3.0
         with:
           # Set to false if you do not have GitHub Advanced Security
           advanced-security: true
