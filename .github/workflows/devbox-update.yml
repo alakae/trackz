@@ -53,11 +53,12 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Commit changes
-        if: steps.check-outdated.outputs.updates_available == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git add devbox.lock
           git commit -m "chore(deps): update devbox.lock"
-          git push -f origin automated/devbox-update
+          git push -f https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git HEAD:automated/devbox-update
 
       - name: Authenticate gh CLI with PAT
         if: steps.check-outdated.outputs.updates_available == 'true'
