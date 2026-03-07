@@ -10,24 +10,42 @@ updates:
         update-types: ["version-update:semver-patch"]
 
     groups:
-      production-dependencies:
-        applies-to: version-updates
-        patterns: ["dompurify", "react*"]
-        update-types: ["minor", "patch"]
-      dev-dependencies:
+      # Major bump groups — coordinate packages that must move together
+      eslint-major:
         applies-to: version-updates
         patterns:
-          [
-            "@eslint/*",
-            "@types/*",
-            "@vitejs/*",
-            "eslint*",
-            "globals",
-            "prettier",
-            "typescript*",
-            "vite",
-          ]
-        update-types: ["minor", "patch"]
+          - "eslint"
+          - "eslint-*"
+          - "@eslint/*"
+          - "typescript-eslint"
+        update-types: ["major"]
+
+      vite-major:
+        applies-to: version-updates
+        patterns:
+          - "vite"
+          - "@vitejs/*"
+          - "rollup"
+        update-types: ["major"]
+
+      react-major:
+        applies-to: version-updates
+        patterns:
+          - "react*"
+          - "@types/react*"
+        update-types: ["major"]
+
+      # Minor groups — broad catch-all by dependency type
+      production-dependencies:
+        applies-to: version-updates
+        dependency-type: "production"
+        update-types: ["minor"]
+
+      dev-dependencies:
+        applies-to: version-updates
+        dependency-type: "development"
+        update-types: ["minor"]
+
     cooldown:
       default-days: 7
 
