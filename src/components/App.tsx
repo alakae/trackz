@@ -11,12 +11,10 @@ function App() {
     <Router basename={import.meta.env.BASE_URL}>
       <div className="app-container">
         <nav className="navbar">
+          <Link to="/" className="nav-logo">
+            Trackz
+          </Link>
           <ul className="nav-list">
-            <li>
-              <Link to="/" className="nav-item">
-                Home
-              </Link>
-            </li>
             <li>
               <Link to="/stations" className="nav-item">
                 Stations

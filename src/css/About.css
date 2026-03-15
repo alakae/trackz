@@ -1,0 +1,15 @@
+.about-card {
+  margin: 2rem auto 0;
+  max-width: 480px;
+  text-align: left;
+  padding: 1.5rem 1.5rem 1.5rem 1.25rem;
+  border-left: 3px solid #EB0000;
+  background: #0d1117;
+  border-radius: 0 4px 4px 0;
+  color: #c9d1d9;
+  line-height: 1.8;
+}
+
+.about-card p {
+  margin: 0;
+}

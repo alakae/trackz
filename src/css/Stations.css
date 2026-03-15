@@ -1,57 +1,91 @@
 /* Search box and results styles */
 .search-container {
   margin: 2rem auto;
-  max-width: 600px;
+  max-width: 560px;
+  text-align: left;
 }
 
 .search-input {
   width: 100%;
-  padding: 1rem;
-  font-size: 1.1rem;
-  border: 2px solid #333333;
-  border-radius: 8px;
-  background-color: #1a1a1a;
-  color: #ffffff;
-  transition: border-color 0.3s ease;
+  padding: 0.9rem 1rem;
+  font-size: 1rem;
+  font-family: ui-monospace, "Cascadia Code", "Fira Code", Menlo, Monaco, Consolas, monospace;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  border: 1px solid #21262d;
+  border-radius: 4px;
+  background-color: #0d1117;
+  color: #f0f0f0;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-input::placeholder {
+  color: #4a5260;
+  font-family: ui-monospace, "Cascadia Code", "Fira Code", Menlo, Monaco, Consolas, monospace;
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #646cff;
+  border-color: #EB0000;
+  box-shadow: 0 0 0 3px rgba(235, 0, 0, 0.12);
 }
 
 .loading {
   text-align: center;
   margin: 1rem 0;
-  color: #a0a0a0;
+  color: #8b9299;
+  font-size: 0.9rem;
+  font-family: ui-monospace, "Cascadia Code", "Fira Code", Menlo, Monaco, Consolas, monospace;
 }
 
 .results-container {
-  margin-top: 1rem;
-  background-color: #1a1a1a;
-  border-radius: 8px;
+  margin-top: 0.5rem;
+  background-color: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .station-item {
-  padding: 0.8rem 1rem;
+  padding: 0.85rem 1rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.15s ease, border-left-color 0.15s ease;
+  border-left: 3px solid transparent;
+  color: #c9d1d9;
+  text-decoration: none;
+  border-bottom: 1px solid #161b22;
+}
+
+.station-item:last-child {
+  border-bottom: none;
 }
 
 .station-item:hover {
-  background-color: #333333;
+  background-color: #161b22;
+  border-left-color: #EB0000;
+  color: #f0f0f0;
 }
 
 .station-item i {
-  color: #646cff;
-  font-size: 1.2rem;
+  color: #EB0000;
+  font-size: 1rem;
+  flex-shrink: 0;
 }
 
 .sl-keyword {
-  color: #646cff;
+  color: #EB0000;
   font-weight: 600;
+}
+
+.error-message {
+  color: #ff4444;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+  padding: 0.75rem 1rem;
+  background-color: rgba(235, 0, 0, 0.08);
+  border: 1px solid rgba(235, 0, 0, 0.2);
+  border-radius: 4px;
 }
