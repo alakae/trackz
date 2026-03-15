@@ -1,5 +1,11 @@
 :root {
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -15,7 +21,7 @@
 
 a {
   font-weight: 500;
-  color: #EB0000;
+  color: #eb0000;
   text-decoration: inherit;
 }
 a:hover {
@@ -53,10 +59,10 @@ button {
   transition: border-color 0.2s;
 }
 button:hover {
-  border-color: #EB0000;
+  border-color: #eb0000;
 }
 button:focus,
 button:focus-visible {
-  outline: 2px solid #EB0000;
+  outline: 2px solid #eb0000;
   outline-offset: 2px;
 }

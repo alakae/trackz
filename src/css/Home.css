@@ -14,7 +14,7 @@
   font-weight: 500;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: #EB0000;
+  color: #eb0000;
   margin-bottom: 1.5rem;
 }
 
@@ -47,7 +47,7 @@
   gap: 0.5rem;
   margin-top: 3rem;
   padding: 0.85rem 2.25rem;
-  background-color: #EB0000;
+  background-color: #eb0000;
   color: #ffffff;
   font-weight: 600;
   font-size: 0.8rem;
@@ -55,7 +55,9 @@
   text-transform: uppercase;
   border-radius: 2px;
   text-decoration: none;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .home-cta-button:hover {

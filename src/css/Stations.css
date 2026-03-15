@@ -9,24 +9,30 @@
   width: 100%;
   padding: 0.9rem 1rem;
   font-size: 1rem;
-  font-family: ui-monospace, "Cascadia Code", "Fira Code", Menlo, Monaco, Consolas, monospace;
+  font-family:
+    ui-monospace, "Cascadia Code", "Fira Code", Menlo, Monaco, Consolas,
+    monospace;
   font-weight: 400;
   letter-spacing: 0.02em;
   border: 1px solid #21262d;
   border-radius: 4px;
   background-color: #0d1117;
   color: #f0f0f0;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .search-input::placeholder {
   color: #4a5260;
-  font-family: ui-monospace, "Cascadia Code", "Fira Code", Menlo, Monaco, Consolas, monospace;
+  font-family:
+    ui-monospace, "Cascadia Code", "Fira Code", Menlo, Monaco, Consolas,
+    monospace;
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #EB0000;
+  border-color: #eb0000;
   box-shadow: 0 0 0 3px rgba(235, 0, 0, 0.12);
 }
 
@@ -35,7 +41,9 @@
   margin: 1rem 0;
   color: #8b9299;
   font-size: 0.9rem;
-  font-family: ui-monospace, "Cascadia Code", "Fira Code", Menlo, Monaco, Consolas, monospace;
+  font-family:
+    ui-monospace, "Cascadia Code", "Fira Code", Menlo, Monaco, Consolas,
+    monospace;
 }
 
 .results-container {
@@ -52,7 +60,9 @@
   align-items: center;
   gap: 0.75rem;
   cursor: pointer;
-  transition: background-color 0.15s ease, border-left-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    border-left-color 0.15s ease;
   border-left: 3px solid transparent;
   color: #c9d1d9;
   text-decoration: none;
@@ -65,18 +75,18 @@
 
 .station-item:hover {
   background-color: #161b22;
-  border-left-color: #EB0000;
+  border-left-color: #eb0000;
   color: #f0f0f0;
 }
 
 .station-item i {
-  color: #EB0000;
+  color: #eb0000;
   font-size: 1rem;
   flex-shrink: 0;
 }
 
 .sl-keyword {
-  color: #EB0000;
+  color: #eb0000;
   font-weight: 600;
 }
 
