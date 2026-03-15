@@ -21,3 +21,14 @@ devbox run -- npm run dev
 ```
 
 The page will reload if you make edits. You will also see any lint errors in the console.
+
+## CI dry run
+
+To replicate the [pull request checks](.github/workflows/pull-request-checks.yml) locally, run the following commands in sequence:
+
+```
+devbox run -- npm ci
+devbox run -- npm run build
+devbox run -- npm run lint
+devbox run -- npm run format:check
+```
