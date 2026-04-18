@@ -66,6 +66,7 @@ export const StationTable = ({ connections }: StationTableProps) => {
             })
             .map((connection, index) => {
               const [bgColor, textColor] = connection.color.split("~");
+              const trainNumber = connection["*Z"].replace(/^0+/, "");
 
               const getTime = () => {
                 const arrivalTime =
@@ -111,8 +112,29 @@ export const StationTable = ({ connections }: StationTableProps) => {
                       color: `#${textColor}`,
                     }}
                   >
-                    {connection.line}{" "}
-                    {connection["*Z"]?.replace(/^0+/, "") || ""}
+                    <form
+                      method="POST"
+                      action="https://www.reisezuege.ch/index.php"
+                      target="_blank"
+                      style={{ display: "inline" }}
+                    >
+                      <input type="hidden" name="znummer" value={trainNumber} />
+                      <input type="hidden" name="action" value="1" />
+                      <button
+                        type="submit"
+                        title={`Zugdetails für ${trainNumber} öffnen`}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          color: "inherit",
+                          cursor: "pointer",
+                          font: "inherit",
+                          padding: 0,
+                        }}
+                      >
+                        {connection.line} {trainNumber}
+                      </button>
+                    </form>
                   </td>
                   <td>{getTime()}</td>
                   <td>{connection.terminal.name}</td>
