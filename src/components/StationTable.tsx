@@ -13,9 +13,11 @@ import { useTriggerAutoRefresh } from "../utils/useTriggerAutoRefresh.tsx";
 interface StationTableProps {
   connections: DisplayConnection[];
   hoveredTrainNumber: string | null;
+  onTrainHover: (trainNumber: string) => void;
+  onTrainHoverEnd: () => void;
 }
 
-export const StationTable = ({ connections, hoveredTrainNumber }: StationTableProps) => {
+export const StationTable = ({ connections, hoveredTrainNumber, onTrainHover, onTrainHoverEnd }: StationTableProps) => {
   useTriggerAutoRefresh();
   const now = new Date().getTime();
   const oneHourFromNow = now + 60 * 60 * 1000;
@@ -108,6 +110,8 @@ export const StationTable = ({ connections, hoveredTrainNumber }: StationTablePr
                 <tr
                   key={`${connection.mode}-${index}`}
                   className={hoveredTrainNumber === connection["*Z"] ? "highlighted" : undefined}
+                  onMouseEnter={() => onTrainHover(connection["*Z"])}
+                  onMouseLeave={onTrainHoverEnd}
                 >
                   <td>{connection.mode.charAt(0)}</td>
                   <td

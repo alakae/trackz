@@ -45,12 +45,15 @@ export const StationBoard = () => {
       <h1>Station Board - {stationName}</h1>
       <StationDiagram
         connections={connections}
+        hoveredTrainNumber={hoveredTrainNumber}
         onTrainHover={setHoveredTrainNumber}
         onTrainHoverEnd={() => setHoveredTrainNumber(null)}
       />
       <StationTable
         connections={connections}
         hoveredTrainNumber={hoveredTrainNumber}
+        onTrainHover={setHoveredTrainNumber}
+        onTrainHoverEnd={() => setHoveredTrainNumber(null)}
       />
     </div>
   );

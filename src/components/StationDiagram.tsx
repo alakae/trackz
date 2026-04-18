@@ -10,12 +10,14 @@ import { useTriggerAutoRefresh } from "../utils/useTriggerAutoRefresh.tsx";
 
 interface StationDiagramProps {
   connections: DisplayConnection[];
+  hoveredTrainNumber: string | null;
   onTrainHover: (trainNumber: string) => void;
   onTrainHoverEnd: () => void;
 }
 
 export const StationDiagram: React.FC<StationDiagramProps> = ({
   connections,
+  hoveredTrainNumber,
   onTrainHover,
   onTrainHoverEnd,
 }) => {
@@ -220,22 +222,10 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
 
             const hasDelay =
               effectiveX1 !== scheduledX1 || effectiveX2 !== scheduledX2;
+            const isHovered = hoveredTrainNumber === conn["*Z"];
 
             return (
               <React.Fragment key={index}>
-                {/* Scheduled position (solid fill) */}
-                {scheduledWidth > 0 && (
-                  <Rect
-                    x={clampedScheduledX1}
-                    y={trackToY(conn.track) - 20 / 2}
-                    width={scheduledWidth}
-                    height={20}
-                    fill={conn.color ? `#${conn.color.split("~")[0]}` : "#666"}
-                    cornerRadius={5}
-                    onMouseEnter={() => onTrainHover(conn["*Z"])}
-                    onMouseLeave={onTrainHoverEnd}
-                  />
-                )}
                 {/* Effective position (outline) when delayed */}
                 {hasDelay && effectiveWidth > 0 && (
                   <Rect
@@ -249,6 +239,21 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                     }
                     strokeWidth={2}
                     cornerRadius={5}
+                    onMouseEnter={() => onTrainHover(conn["*Z"])}
+                    onMouseLeave={onTrainHoverEnd}
+                  />
+                )}
+                {/* Scheduled position (solid fill) — rendered after effective so it appears on top when highlighted */}
+                {scheduledWidth > 0 && (
+                  <Rect
+                    x={clampedScheduledX1}
+                    y={trackToY(conn.track) - 20 / 2}
+                    width={scheduledWidth}
+                    height={20}
+                    fill={conn.color ? `#${conn.color.split("~")[0]}` : "#666"}
+                    cornerRadius={5}
+                    stroke={isHovered ? "#f8d649" : undefined}
+                    strokeWidth={isHovered ? 2 : undefined}
                     onMouseEnter={() => onTrainHover(conn["*Z"])}
                     onMouseLeave={onTrainHoverEnd}
                   />
