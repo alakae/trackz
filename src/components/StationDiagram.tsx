@@ -31,12 +31,16 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
   };
   const [ref, bounds] = useMeasure<HTMLDivElement>();
 
-  // Get unique tracks and sort them
+  // Normalize a track string to a number for diagram grouping.
+  // "41/42" → 41, "6" → 6. Combined-track labels use the first number.
+  const normalizeTrack = (track: string): number => parseInt(track, 10);
+
+  // Get unique normalized tracks and sort them numerically
   const tracks = [
     ...new Set(
       connections
-        .map((conn) => conn.track)
-        .filter((track) => track !== undefined),
+        .map((conn) => conn.track !== undefined ? normalizeTrack(conn.track) : undefined)
+        .filter((track): track is number => track !== undefined),
     ),
   ].sort((a, b) => a - b);
   const trackHeight =
@@ -56,8 +60,8 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
   };
 
   // Helper function to convert track to y position
-  const trackToY = (track: number) => {
-    const index = tracks.indexOf(track);
+  const trackToY = (track: string) => {
+    const index = tracks.indexOf(normalizeTrack(track));
     return MARGIN.top + index * trackHeight + trackHeight / 2;
   };
 

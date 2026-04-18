@@ -7,10 +7,16 @@ import {
   TerminalConnection,
 } from "./displayConnection.ts";
 
+// Finds the departure that matches a given arrival as a passing train (through
+// service that stops briefly and continues). Matches on line + train number
+// (*Z), which together uniquely identify a train run, plus a 45-minute dwell
+// window. No track conflict check is applied here: at combined platforms
+// (e.g. "43/44") multiple trains legitimately share the same track label
+// simultaneously, so a track-based check produces false conflicts. The *Z
+// match is sufficient to guarantee correctness without it.
 const findMatchingDeparture = (
   arrival: ArrivalConnection,
   departures: DepartureConnection[],
-  allConnections: DisplayConnection[],
 ): DepartureConnection | undefined => {
   return departures.find((departure) => {
     if (arrival.line !== departure.line || arrival["*Z"] !== departure["*Z"]) {
@@ -20,27 +26,11 @@ const findMatchingDeparture = (
     const arrivalTime = new Date(arrival.arrival_time).getTime();
     const departureTime = new Date(departure.departure_time).getTime();
 
-    if (
-      departureTime < arrivalTime ||
-      departureTime - arrivalTime > 45 * 60 * 1000
-    ) {
-      return false;
-    }
-
-    const trackConflict = allConnections.some((conn) => {
-      const connTime = new Date(
-        conn.mode === "Departure" ? conn.departure_time : conn.arrival_time,
-      ).getTime();
-      return (
-        conn.track === arrival.track &&
-        connTime > arrivalTime &&
-        connTime < departureTime &&
-        conn !== arrival &&
-        conn !== departure
-      );
-    });
-
-    return !trackConflict;
+    // Departure must follow arrival and the dwell must be at most 45 minutes.
+    return (
+      departureTime >= arrivalTime &&
+      departureTime - arrivalTime <= 45 * 60 * 1000
+    );
   });
 };
 
@@ -104,7 +94,7 @@ export const processConnections = (
       "*G": conn["*G"],
       "*L": conn["*L"],
       "*Z": conn["*Z"],
-      track: parseInt(conn.track, 10) || undefined,
+      track: conn.track?.replace("!", "").trim() || undefined,
       changed_track: conn.track?.includes("!"),
       mode: "Departure" as const,
       departure_time: new Date(conn.time), // Map time to departure_time
@@ -121,7 +111,7 @@ export const processConnections = (
       "*G": conn["*G"],
       "*L": conn["*L"],
       "*Z": conn["*Z"],
-      track: parseInt(conn.track, 10) || undefined,
+      track: conn.track?.replace("!", "").trim() || undefined,
       changed_track: conn.track?.includes("!"),
       mode: "Arrival" as const,
       arrival_time: new Date(conn.time), // Map time to arrival_time
@@ -161,11 +151,7 @@ export const processConnections = (
     if (usedConnections.has(arrival)) continue;
 
     // First try to match as passing train (existing logic)
-    const matchingDeparture = findMatchingDeparture(
-      arrival,
-      departures,
-      allConnections,
-    );
+    const matchingDeparture = findMatchingDeparture(arrival, departures);
 
     if (matchingDeparture && !usedConnections.has(matchingDeparture)) {
       // Create passing train entry (existing logic)
