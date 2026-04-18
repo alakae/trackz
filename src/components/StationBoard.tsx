@@ -11,6 +11,7 @@ export const StationBoard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [connections, setConnections] = useState<DisplayConnection[]>([]);
+  const [hoveredTrainNumber, setHoveredTrainNumber] = useState<string | null>(null);
   const [stationName, setStationName] = useState<string>("");
 
   useEffect(() => {
@@ -42,8 +43,15 @@ export const StationBoard = () => {
   return (
     <div className="page-container">
       <h1>Station Board - {stationName}</h1>
-      <StationDiagram connections={connections} />
-      <StationTable connections={connections} />
+      <StationDiagram
+        connections={connections}
+        onTrainHover={setHoveredTrainNumber}
+        onTrainHoverEnd={() => setHoveredTrainNumber(null)}
+      />
+      <StationTable
+        connections={connections}
+        hoveredTrainNumber={hoveredTrainNumber}
+      />
     </div>
   );
 };

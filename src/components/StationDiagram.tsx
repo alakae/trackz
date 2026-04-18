@@ -10,10 +10,14 @@ import { useTriggerAutoRefresh } from "../utils/useTriggerAutoRefresh.tsx";
 
 interface StationDiagramProps {
   connections: DisplayConnection[];
+  onTrainHover: (trainNumber: string) => void;
+  onTrainHoverEnd: () => void;
 }
 
 export const StationDiagram: React.FC<StationDiagramProps> = ({
   connections,
+  onTrainHover,
+  onTrainHoverEnd,
 }) => {
   useTriggerAutoRefresh();
 
@@ -228,6 +232,8 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                     height={20}
                     fill={conn.color ? `#${conn.color.split("~")[0]}` : "#666"}
                     cornerRadius={5}
+                    onMouseEnter={() => onTrainHover(conn["*Z"])}
+                    onMouseLeave={onTrainHoverEnd}
                   />
                 )}
                 {/* Effective position (outline) when delayed */}
@@ -243,6 +249,8 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                     }
                     strokeWidth={2}
                     cornerRadius={5}
+                    onMouseEnter={() => onTrainHover(conn["*Z"])}
+                    onMouseLeave={onTrainHoverEnd}
                   />
                 )}
                 {/* Label - position at whichever box is visible */}
@@ -259,6 +267,8 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                     y={trackToY(conn.track) - 8}
                     fill={conn.color ? `#${conn.color.split("~")[1]}` : "#fff"}
                     fontSize={14}
+                    onMouseEnter={() => onTrainHover(conn["*Z"])}
+                    onMouseLeave={onTrainHoverEnd}
                   />
                 )}
               </React.Fragment>

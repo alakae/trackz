@@ -25,7 +25,8 @@
   color: #333;
 }
 
-.station-table tr:hover {
+.station-table tr:hover,
+.station-table tr.highlighted {
   background-color: #f8f8f8;
   color: #333;
 }
