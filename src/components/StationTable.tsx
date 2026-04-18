@@ -69,7 +69,9 @@ export const StationTable = ({ connections, hoveredTrainNumber, onTrainHover, on
             })
             .map((connection, index) => {
               const [bgColor, textColor] = connection.color.split("~");
-              const trainNumber = connection["*Z"].replace(/^0+/, "");
+              const rawTrainNumber = connection["*Z"] ?? "";
+              const trainNumber = rawTrainNumber.replace(/^0+/, "");
+              const isHovered = rawTrainNumber !== "" && hoveredTrainNumber === rawTrainNumber;
 
               const getTime = () => {
                 const arrivalTime =
@@ -109,9 +111,9 @@ export const StationTable = ({ connections, hoveredTrainNumber, onTrainHover, on
               return (
                 <tr
                   key={`${connection.mode}-${index}`}
-                  className={hoveredTrainNumber === connection["*Z"] ? "highlighted" : undefined}
-                  onMouseEnter={() => onTrainHover(connection["*Z"])}
-                  onMouseLeave={onTrainHoverEnd}
+                  className={isHovered ? "highlighted" : undefined}
+                  onMouseEnter={rawTrainNumber ? () => onTrainHover(rawTrainNumber) : undefined}
+                  onMouseLeave={rawTrainNumber ? onTrainHoverEnd : undefined}
                 >
                   <td>{connection.mode.charAt(0)}</td>
                   <td
@@ -120,29 +122,33 @@ export const StationTable = ({ connections, hoveredTrainNumber, onTrainHover, on
                       color: `#${textColor}`,
                     }}
                   >
-                    <form
-                      method="POST"
-                      action="https://www.reisezuege.ch/index.php"
-                      target="_blank"
-                      style={{ display: "inline" }}
-                    >
-                      <input type="hidden" name="znummer" value={trainNumber} />
-                      <input type="hidden" name="action" value="1" />
-                      <button
-                        type="submit"
-                        title={`Zugdetails für ${trainNumber} öffnen`}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          color: "inherit",
-                          cursor: "pointer",
-                          font: "inherit",
-                          padding: 0,
-                        }}
+                    {trainNumber ? (
+                      <form
+                        method="POST"
+                        action="https://www.reisezuege.ch/index.php"
+                        target="_blank"
+                        style={{ display: "inline" }}
                       >
-                        {connection.line} {trainNumber}
-                      </button>
-                    </form>
+                        <input type="hidden" name="znummer" value={trainNumber} />
+                        <input type="hidden" name="action" value="1" />
+                        <button
+                          type="submit"
+                          title={`Zugdetails für ${trainNumber} öffnen`}
+                          style={{
+                            background: "none",
+                            border: "none",
+                            color: "inherit",
+                            cursor: "pointer",
+                            font: "inherit",
+                            padding: 0,
+                          }}
+                        >
+                          {connection.line} {trainNumber}
+                        </button>
+                      </form>
+                    ) : (
+                      <span>{connection.line}</span>
+                    )}
                   </td>
                   <td>{getTime()}</td>
                   <td>{connection.terminal.name}</td>
