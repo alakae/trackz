@@ -60,8 +60,8 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
   };
 
   // Helper function to convert track to y position
-  const trackToY = (track: string) => {
-    const index = tracks.indexOf(normalizeTrack(track));
+  const trackToY = (track: number) => {
+    const index = tracks.indexOf(track);
     return MARGIN.top + index * trackHeight + trackHeight / 2;
   };
 
@@ -234,7 +234,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                 {hasDelay && effectiveWidth > 0 && (
                   <Rect
                     x={clampedEffectiveX1}
-                    y={trackToY(conn.track) - 20 / 2}
+                    y={trackToY(normalizeTrack(conn.track)) - 20 / 2}
                     width={effectiveWidth}
                     height={20}
                     fill="transparent"
@@ -251,7 +251,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                 {scheduledWidth > 0 && (
                   <Rect
                     x={clampedScheduledX1}
-                    y={trackToY(conn.track) - 20 / 2}
+                    y={trackToY(normalizeTrack(conn.track)) - 20 / 2}
                     width={scheduledWidth}
                     height={20}
                     fill={conn.color ? `#${conn.color.split("~")[0]}` : "#666"}
@@ -273,7 +273,7 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
                         MARGIN.left,
                       ) + 5
                     }
-                    y={trackToY(conn.track) - 8}
+                    y={trackToY(normalizeTrack(conn.track)) - 8}
                     fill={conn.color ? `#${conn.color.split("~")[1]}` : "#fff"}
                     fontSize={14}
                     onMouseEnter={() => onTrainHover(conn["*Z"])}
