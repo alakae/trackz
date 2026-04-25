@@ -39,7 +39,9 @@ export const StationDiagram: React.FC<StationDiagramProps> = ({
   const tracks = [
     ...new Set(
       connections
-        .map((conn) => conn.track !== undefined ? normalizeTrack(conn.track) : undefined)
+        .map((conn) =>
+          conn.track !== undefined ? normalizeTrack(conn.track) : undefined,
+        )
         .filter((track): track is number => track !== undefined),
     ),
   ].sort((a, b) => a - b);

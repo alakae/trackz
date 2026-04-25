@@ -11,7 +11,9 @@ export const StationBoard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [connections, setConnections] = useState<DisplayConnection[]>([]);
-  const [hoveredTrainNumber, setHoveredTrainNumber] = useState<string | null>(null);
+  const [hoveredTrainNumber, setHoveredTrainNumber] = useState<string | null>(
+    null,
+  );
   const [stationName, setStationName] = useState<string>("");
 
   useEffect(() => {

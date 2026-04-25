@@ -17,7 +17,12 @@ interface StationTableProps {
   onTrainHoverEnd: () => void;
 }
 
-export const StationTable = ({ connections, hoveredTrainNumber, onTrainHover, onTrainHoverEnd }: StationTableProps) => {
+export const StationTable = ({
+  connections,
+  hoveredTrainNumber,
+  onTrainHover,
+  onTrainHoverEnd,
+}: StationTableProps) => {
   useTriggerAutoRefresh();
   const now = new Date().getTime();
   const oneHourFromNow = now + 60 * 60 * 1000;
@@ -71,7 +76,8 @@ export const StationTable = ({ connections, hoveredTrainNumber, onTrainHover, on
               const [bgColor, textColor] = connection.color.split("~");
               const rawTrainNumber = connection["*Z"] ?? "";
               const trainNumber = rawTrainNumber.replace(/^0+/, "");
-              const isHovered = rawTrainNumber !== "" && hoveredTrainNumber === rawTrainNumber;
+              const isHovered =
+                rawTrainNumber !== "" && hoveredTrainNumber === rawTrainNumber;
 
               const getTime = () => {
                 const arrivalTime =
@@ -112,7 +118,11 @@ export const StationTable = ({ connections, hoveredTrainNumber, onTrainHover, on
                 <tr
                   key={`${connection.mode}-${index}`}
                   className={isHovered ? "highlighted" : undefined}
-                  onMouseEnter={rawTrainNumber ? () => onTrainHover(rawTrainNumber) : undefined}
+                  onMouseEnter={
+                    rawTrainNumber
+                      ? () => onTrainHover(rawTrainNumber)
+                      : undefined
+                  }
                   onMouseLeave={rawTrainNumber ? onTrainHoverEnd : undefined}
                 >
                   <td>{connection.mode.charAt(0)}</td>
@@ -129,7 +139,11 @@ export const StationTable = ({ connections, hoveredTrainNumber, onTrainHover, on
                         target="_blank"
                         style={{ display: "inline" }}
                       >
-                        <input type="hidden" name="znummer" value={trainNumber} />
+                        <input
+                          type="hidden"
+                          name="znummer"
+                          value={trainNumber}
+                        />
                         <input type="hidden" name="action" value="1" />
                         <button
                           type="submit"
