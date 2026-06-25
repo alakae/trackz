@@ -12,7 +12,7 @@
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,css,json}\""
   },
   "dependencies": {
-    "dompurify": "^3.4.0",
+    "dompurify": "^3.4.11",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-konva": "^19.2.0",
