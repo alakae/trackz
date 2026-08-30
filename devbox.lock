@@ -2,45 +2,45 @@
   "lockfile_version": "1",
   "packages": {
     "github:NixOS/nixpkgs/nixpkgs-unstable": {
-      "last_modified": "2026-08-10T07:49:06Z",
-      "resolved": "github:NixOS/nixpkgs/d482ef84049d9b7276b83a06e4e4d76983830097?lastModified=1786348146&narHash=sha256-we5zDEFfn8TgzeWKjKDMIjeQZ59omEPl23NIF%2B13%2Fys%3D"
+      "last_modified": "2026-08-29T00:50:12Z",
+      "resolved": "github:NixOS/nixpkgs/e8be7818e19ada32105a8af937a6a473b38167ca?lastModified=1787964612&narHash=sha256-0N9nghg3nwzX6b6qc77EzjR9cu%2FZ%2BUR66FlfsCqiURs%3D"
     },
     "nodejs@latest": {
-      "last_modified": "2026-08-06T00:10:29Z",
+      "last_modified": "2026-08-27T07:16:00Z",
       "plugin_version": "0.0.4",
-      "resolved": "github:NixOS/nixpkgs/70ce234312134a463ba7728e94da2486a1d237ac#nodejs_26",
+      "resolved": "github:NixOS/nixpkgs/c27cdad491a991b11ed731760aa2ef8db0cb0410#nodejs_26",
       "source": "devbox-search",
-      "version": "26.7.0",
+      "version": "26.8.0",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/f7n3say8yjkjcqqcik422kcvjagdvp8c-nodejs-26.7.0",
+              "path": "/nix/store/byxb7vfdrf0hhkzqbgqp5zhdyjhc1aci-nodejs-26.8.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/f7n3say8yjkjcqqcik422kcvjagdvp8c-nodejs-26.7.0"
+          "store_path": "/nix/store/byxb7vfdrf0hhkzqbgqp5zhdyjhc1aci-nodejs-26.8.0"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/i466p6dl3yfmlpd83zl0pvd8gzjh5yj4-nodejs-26.7.0",
+              "path": "/nix/store/y2br71mh69nfih9ia1fkcmx01xggr5kp-nodejs-26.8.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/i466p6dl3yfmlpd83zl0pvd8gzjh5yj4-nodejs-26.7.0"
+          "store_path": "/nix/store/y2br71mh69nfih9ia1fkcmx01xggr5kp-nodejs-26.8.0"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/jbr8baiszp449aacg17k0z59bs3v48as-nodejs-26.7.0",
+              "path": "/nix/store/8w5i86b24349z1bx52irf6pdafng82i5-nodejs-26.8.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/jbr8baiszp449aacg17k0z59bs3v48as-nodejs-26.7.0"
+          "store_path": "/nix/store/8w5i86b24349z1bx52irf6pdafng82i5-nodejs-26.8.0"
         }
       }
     }
