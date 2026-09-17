@@ -1,0 +1,131 @@
+/* Track occupancy / Radar switch: the app's plain buttons; the active one
+   keeps the red border the global button style uses on hover. */
+.view-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.25rem 0 1.5rem;
+}
+
+.view-toggle button[aria-pressed="true"] {
+  border-color: #eb0000;
+}
+
+/* The radar sits in the same dark card as the search results. */
+.radar-map {
+  position: relative;
+  background-color: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 4px;
+  overflow: hidden;
+  text-align: left;
+}
+
+.radar-canvas {
+  display: block;
+  width: 100%;
+  touch-action: manipulation;
+}
+
+.radar-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+}
+
+/* Overlays inside the radar. */
+.radar-overlay {
+  position: absolute;
+  padding: 0.35rem 0.6rem;
+  background-color: rgba(13, 17, 23, 0.9);
+  border: 1px solid #21262d;
+  border-radius: 4px;
+  color: #c9d1d9;
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+
+.radar-clock {
+  top: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.radar-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #eb0000;
+  animation: radar-pulse 1.6s infinite;
+}
+
+@keyframes radar-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(235, 0, 0, 0.7);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 8px rgba(235, 0, 0, 0);
+  }
+}
+
+.radar-legend {
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+}
+
+.radar-legend i {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 0.3rem;
+  border-radius: 50%;
+  background-color: #2b63f1;
+  border: 1px solid #ffffff;
+  vertical-align: middle;
+}
+
+.radar-legend i.is-faded {
+  opacity: 0.45;
+}
+
+.radar-legend i.is-delayed {
+  background-color: transparent;
+  border: 2px solid #ff4444;
+}
+
+.radar-tip {
+  width: 220px;
+  line-height: 1.5;
+}
+
+/* Same treatment as the line cell in the station table. */
+.radar-line {
+  padding: 0 0.3rem;
+}
+
+/* The station dot with the number of trains standing at its platforms. */
+.radar-legend i.is-station {
+  width: 15px;
+  height: 15px;
+  background-color: #eb0000;
+  border: none;
+  color: #ffffff;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 15px;
+  text-align: center;
+}
+
+.radar-tip.radar-stop-tip {
+  width: auto;
+  white-space: nowrap;
+}

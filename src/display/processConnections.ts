@@ -100,6 +100,8 @@ export const processConnections = (
       departure_time: new Date(conn.time), // Map time to departure_time
       dep_delay:
         parseInt(conn.dep_delay?.replace("+", "") || "0", 10) || undefined,
+      cancelled: /x/i.test(conn.dep_delay ?? ""),
+      subsequent_stops: conn.subsequent_stops,
     })),
     ...arrivalData.connections.map((conn) => ({
       type: conn.type,
@@ -117,6 +119,7 @@ export const processConnections = (
       arrival_time: new Date(conn.time), // Map time to arrival_time
       arr_delay:
         parseInt(conn.arr_delay?.replace("+", "") || "0", 10) || undefined,
+      cancelled: /x/i.test(conn.arr_delay ?? ""),
     })),
   ].filter((conn) => {
     const connTime = new Date(
@@ -162,6 +165,8 @@ export const processConnections = (
         departure_time: matchingDeparture.departure_time,
         arr_delay: arrival.arr_delay,
         dep_delay: matchingDeparture.dep_delay,
+        arrival_leg: arrival,
+        departure_leg: matchingDeparture,
       };
 
       processedConnections.push(passingConnection);
@@ -187,6 +192,8 @@ export const processConnections = (
           departure_time: matchingTerminalDeparture.departure_time,
           arr_delay: arrival.arr_delay,
           dep_delay: matchingTerminalDeparture.dep_delay,
+          arrival_leg: arrival,
+          departure_leg: matchingTerminalDeparture,
         };
 
         processedConnections.push(terminalConnection);

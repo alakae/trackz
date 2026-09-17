@@ -1,5 +1,17 @@
 import { Terminal } from "./terminal.ts";
 
+// One onward stop, returned for departures when show_subsequent_stops=1.
+export interface SubsequentStop {
+  id: string;
+  name: string;
+  x: number;
+  y: number;
+  lon: number;
+  lat: number;
+  arr: string | null; // "YYYY-MM-DD HH:mm:ss", null at the origin
+  dep: string | null; // null at the final stop
+}
+
 export interface Connection {
   time: string; // Format: "YYYY-MM-DD HH:mm:ss"
   type: string; // e.g., "strain"
@@ -13,5 +25,6 @@ export interface Connection {
   "*Z": string; // e.g., "016951"
   track: string; // e.g., "6"
   arr_delay: string; // e.g., "+0"
-  dep_delay: string; // e.g., "+0"
+  dep_delay: string; // e.g., "+0", "X" when cancelled
+  subsequent_stops?: SubsequentStop[];
 }

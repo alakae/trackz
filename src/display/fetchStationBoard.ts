@@ -5,6 +5,19 @@ import { processConnections } from "./processConnections.ts";
 interface StationBoardResult {
   connections: DisplayConnection[];
   stationName: string;
+  stop: StationBoardResponse["stop"];
+  // The departure board as returned by search.ch, before processConnections
+  // narrows it to the ±2 h window.
+  departures: StationBoardResponse;
+}
+
+export interface StationBoardOptions {
+  // Ask search.ch for each departure's onward stops (larger payload).
+  withSubsequentStops?: boolean;
+  // Cap on connections per request; search.ch otherwise returns ~24 h.
+  limit?: number;
+  // How far back the board starts. Defaults to two hours.
+  lookBackMinutes?: number;
 }
 
 export function isStationBoardResponse(
@@ -44,15 +57,21 @@ async function parseStationBoard(
 
 export async function fetchStationBoard(
   label: string,
+  options: StationBoardOptions = {},
 ): Promise<StationBoardResult> {
+  const { withSubsequentStops = false, limit, lookBackMinutes = 120 } = options;
   const baseURL = "https://search.ch/timetable/api/stationboard.json";
   const now = new Date();
-  now.setHours(now.getHours() - 2);
+  now.setMinutes(now.getMinutes() - lookBackMinutes);
   const dateParam = now.toISOString().split("T")[0];
   const timeParam = now.toTimeString().split(" ")[0].substring(0, 5);
-  const queryParams = `stop=${encodeURIComponent(label)}&show_tracks=1&show_delays=1&transportation_types=train&date=${dateParam}&time=${timeParam}`;
+  const queryParams =
+    `stop=${encodeURIComponent(label)}&show_tracks=1&show_delays=1&transportation_types=train&date=${dateParam}&time=${timeParam}` +
+    (limit ? `&limit=${limit}` : "");
 
-  const departureURL = `${baseURL}?${queryParams}&mode=departure`;
+  const departureURL =
+    `${baseURL}?${queryParams}&mode=departure` +
+    (withSubsequentStops ? "&show_subsequent_stops=1" : "");
   const arrivalURL = `${baseURL}?${queryParams}&mode=arrival`;
 
   const [departureResponse, arrivalResponse] = await Promise.all([
@@ -68,5 +87,7 @@ export async function fetchStationBoard(
   return {
     connections: processConnections(departureData, arrivalData),
     stationName: departureData.stop.name,
+    stop: departureData.stop,
+    departures: departureData,
   };
 }
