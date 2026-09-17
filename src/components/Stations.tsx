@@ -3,12 +3,24 @@ import { Link } from "react-router-dom";
 import "../css/Stations.css";
 import { Station } from "../api/station.ts";
 import DOMPurify from "dompurify";
+import { TopStations } from "./TopStations.tsx";
+import { SeverityBadge } from "./SeverityBadge.tsx";
+import { fetchMedianDepartureDelay } from "../display/fetchStationDelay.ts";
+import { classifyDelay, DelaySeverity } from "../display/stationDelay.ts";
+
+// Live delay badges are only fetched for the first few dropdown rows —
+// completion.json isn't result-capped, so a broad term could otherwise
+// trigger dozens of stationboard.json calls per keystroke.
+const DELAY_METERED_RESULTS = 8;
 
 export const Stations = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState<Station[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [severityByStationId, setSeverityByStationId] = useState<
+    Record<number, DelaySeverity>
+  >({});
 
   useEffect(() => {
     const fetchStations = async () => {
@@ -44,6 +56,33 @@ export const Stations = () => {
     return () => clearTimeout(debounceTimer);
   }, [searchTerm]);
 
+  useEffect(() => {
+    if (results.length === 0) return;
+
+    let cancelled = false;
+
+    results.slice(0, DELAY_METERED_RESULTS).forEach((station) => {
+      fetchMedianDepartureDelay(station.id)
+        .then(({ medianDelayMinutes }) => {
+          if (cancelled) return;
+          setSeverityByStationId((prev) => ({
+            ...prev,
+            [station.id]: classifyDelay(medianDelayMinutes),
+          }));
+        })
+        .catch((err) => {
+          console.error(
+            `Failed to fetch delay for station "${station.label}":`,
+            err,
+          );
+        });
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [results]);
+
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -71,22 +110,23 @@ export const Stations = () => {
               to={`/station/${station.id}`}
               key={index}
               className="station-item"
-              style={{
-                cursor: "pointer",
-                display: "block",
-                textDecoration: "none",
-              }}
             >
               <i className={station.iconclass}></i>
               <span
+                className="station-item-label"
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(station.html),
                 }}
               ></span>
+              {severityByStationId[station.id] && (
+                <SeverityBadge severity={severityByStationId[station.id]} />
+              )}
             </Link>
           ))}
         </div>
       </div>
+
+      <TopStations />
     </div>
   );
 };

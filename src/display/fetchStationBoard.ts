@@ -7,7 +7,9 @@ interface StationBoardResult {
   stationName: string;
 }
 
-function isStationBoardResponse(data: unknown): data is StationBoardResponse {
+export function isStationBoardResponse(
+  data: unknown,
+): data is StationBoardResponse {
   return (
     typeof data === "object" &&
     data !== null &&
