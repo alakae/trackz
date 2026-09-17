@@ -7,6 +7,39 @@ interface StationBoardResult {
   stationName: string;
 }
 
+function isStationBoardResponse(data: unknown): data is StationBoardResponse {
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    "stop" in data &&
+    "connections" in data &&
+    Array.isArray((data as StationBoardResponse).connections)
+  );
+}
+
+// search.ch's API sometimes returns HTTP 404 on a fully valid stationboard
+// payload (seen for mode=arrival combined with show_tracks/show_delays on
+// larger result sets), while genuine errors ("stop not found", etc.) come
+// back as HTTP 200 with a "messages" array instead of stop/connections. So
+// success is judged by the body shape rather than response.ok/status.
+async function parseStationBoard(
+  response: Response,
+  label: string,
+): Promise<StationBoardResponse> {
+  let data: unknown;
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error(`Failed to fetch ${label}: ${response.statusText}`);
+  }
+
+  if (!isStationBoardResponse(data)) {
+    throw new Error(`Failed to fetch ${label}: ${response.statusText}`);
+  }
+
+  return data;
+}
+
 export async function fetchStationBoard(
   label: string,
 ): Promise<StationBoardResult> {
@@ -25,17 +58,10 @@ export async function fetchStationBoard(
     fetch(arrivalURL),
   ]);
 
-  if (!departureResponse.ok) {
-    throw new Error(
-      `Failed to fetch departures: ${departureResponse.statusText}`,
-    );
-  }
-  if (!arrivalResponse.ok) {
-    throw new Error(`Failed to fetch arrivals: ${arrivalResponse.statusText}`);
-  }
-
-  const departureData: StationBoardResponse = await departureResponse.json();
-  const arrivalData: StationBoardResponse = await arrivalResponse.json();
+  const [departureData, arrivalData] = await Promise.all([
+    parseStationBoard(departureResponse, "departures"),
+    parseStationBoard(arrivalResponse, "arrivals"),
+  ]);
 
   return {
     connections: processConnections(departureData, arrivalData),
