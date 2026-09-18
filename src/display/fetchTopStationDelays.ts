@@ -1,4 +1,5 @@
 import { Station } from "../api/station.ts";
+import { searchStations } from "../api/searchStations.ts";
 import { fetchMedianDepartureDelay } from "./fetchStationDelay.ts";
 import { classifyDelay, StationDelaySummary } from "./stationDelay.ts";
 
@@ -21,15 +22,7 @@ export const TOP_STATIONS = [
 ];
 
 async function resolveStationId(name: string): Promise<Station> {
-  const response = await fetch(
-    `https://search.ch/timetable/api/completion.json?show_ids=1&term=${encodeURIComponent(name)}`,
-  );
-  const results: Station[] = await response.json();
-  const match = results.find(
-    (r) =>
-      r.iconclass === "sl-icon-type-train" ||
-      r.iconclass === "sl-icon-type-strain",
-  );
+  const [match] = await searchStations(name);
 
   if (!match) {
     throw new Error(`No train station found for "${name}"`);
