@@ -1,5 +1,6 @@
 // Base interface with common properties
 import { Terminal } from "../api/terminal.ts";
+import { SubsequentStop } from "../api/connection.ts";
 
 export type Mode = "Departure" | "Arrival" | "Passing" | "Terminal";
 
@@ -16,6 +17,10 @@ interface BaseConnection {
   track: string | undefined;
   changed_track: boolean;
   mode: Mode;
+  // search.ch reports a cancellation as delay "X".
+  cancelled?: boolean;
+  // Onward stops; only present on departures fetched with them.
+  subsequent_stops?: SubsequentStop[];
 }
 
 // Specific interfaces for each mode
@@ -31,7 +36,15 @@ export interface DepartureConnection extends BaseConnection {
   dep_delay: number | undefined;
 }
 
-export interface PassingConnection extends BaseConnection {
+// The arrival and departure a joined entry was built from, so consumers can
+// still reach e.g. where the train came from (a passing entry otherwise
+// carries the departure's terminal) or the departure's onward stops.
+interface JoinedLegs {
+  arrival_leg: ArrivalConnection;
+  departure_leg: DepartureConnection;
+}
+
+export interface PassingConnection extends BaseConnection, JoinedLegs {
   mode: "Passing";
   arrival_time: Date;
   departure_time: Date;
@@ -39,7 +52,7 @@ export interface PassingConnection extends BaseConnection {
   dep_delay: number | undefined;
 }
 
-export interface TerminalConnection extends BaseConnection {
+export interface TerminalConnection extends BaseConnection, JoinedLegs {
   mode: "Terminal";
   arrival_time: Date;
   departure_time: Date;
